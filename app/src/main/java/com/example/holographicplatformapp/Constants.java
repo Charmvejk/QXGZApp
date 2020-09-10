@@ -37,17 +37,17 @@ public class Constants {
      */
     public static String ydd_cx_zydl = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_zydl/data";
     /**
-     *hj 单位名称
+     * hj 单位名称
      */
     public static String ydd_cx_hjdw = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_hjdw/data";
 
     /**
-     *fw  客户端名称
+     * fw  客户端名称
      */
     public static String ydd_cx_fwkhd = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_fwkhd/data";
 
     /**
-     *fw单位名称
+     * fw单位名称
      */
     public static String ydd_cx_dwmc = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_dwmc/data";
 

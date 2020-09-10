@@ -1,42 +1,36 @@
 package com.example.holographicplatformapp.activity.dtjcx;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
-import com.example.holographicplatformapp.activity.cx.QueryDetailsActivity;
 import com.example.holographicplatformapp.bean.DWMCDatasBean;
 import com.example.holographicplatformapp.bean.FWDWMCDatasBean;
 import com.example.holographicplatformapp.bean.FWKHDMCDatasBean;
 import com.example.holographicplatformapp.bean.KHDMCDatasBean;
-import com.example.holographicplatformapp.bean.MainDatasBean;
 import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
-import com.example.holographicplatformapp.utils.PinyinUtils;
+import com.github.promeg.pinyinhelper.Pinyin;
+import com.github.promeg.pinyinhelper.PinyinMapDict;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import javax.xml.transform.Result;
-
-import static com.example.holographicplatformapp.Constants.tj_sy5;
 import static com.example.holographicplatformapp.Constants.ydd_cx_dwmc;
 import static com.example.holographicplatformapp.Constants.ydd_cx_fwkhd;
 import static com.example.holographicplatformapp.Constants.ydd_cx_hjdw;
@@ -302,10 +296,21 @@ public class SearchActivity extends BaseActivity {
             SortModel sortModel = new SortModel();
             sortModel.setName(date.get(i));
             sortModel.setId(ID.get(i));
-            //汉字转换成拼音
-            String pinyin = PinyinUtils.getPingYin(date.get(i));
-            String sortString = pinyin.substring(0, 1).toUpperCase();
 
+            // 添加自定义词典
+            Pinyin.init(Pinyin.newConfig()
+                    .with(new PinyinMapDict() {
+                        @Override
+                        public Map<String, String[]> mapping() {
+                            HashMap<String, String[]> map = new HashMap<String, String[]>();
+                            map.put("长", new String[]{"CHANG"});
+                            return map;
+                        }
+
+                    }));
+            //汉字转换成拼音
+            String pinyin = Pinyin.toPinyin(date.get(i), "/");
+            String sortString = pinyin.substring(0, 1).toUpperCase();
             // 正则表达式，判断首字母是否是英文字母
             if (sortString.matches("[A-Z]")) {
                 sortModel.setLetters(sortString.toUpperCase());
@@ -334,11 +339,11 @@ public class SearchActivity extends BaseActivity {
             filterDateList.clear();
             for (SortModel sortModel : SourceDateList) {
                 String name = sortModel.getName();
+                /**
+                 * 后期首字母
+                 */
                 if (name.indexOf(filterStr.toString()) != -1 ||
-                        PinyinUtils.getFirstSpell(name).startsWith(filterStr.toString())
-                        //不区分大小写
-                        || PinyinUtils.getFirstSpell(name).toLowerCase().startsWith(filterStr.toString())
-                        || PinyinUtils.getFirstSpell(name).toUpperCase().startsWith(filterStr.toString())
+                        Pinyin.toPinyin(name, "/").startsWith(filterStr.toString())
                 ) {
                     filterDateList.add(sortModel);
                 }

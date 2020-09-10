@@ -505,7 +505,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
-                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>5</value></para>" +
+                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>"+id+"</value></para>" +
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>  " + endTime + "</value></para>" +
                 "</paras>");
@@ -518,7 +518,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
-                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>5</value></para>" +
+                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>"+id+"</value></para>" +
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value> " + endTime + "</value></para>" +
                 "</paras>");
