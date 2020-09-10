@@ -1,5 +1,6 @@
 package com.example.holographicplatformapp.activity.cx;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +42,7 @@ public class QueryDetailsActivity extends BaseActivity {
     fwDwBean fwDwBean;
     fwZYCXBean fwZYCXBean;
     fwDwCXBean fwDwCXBean;
+    private static int selectCode = 678;
     /**
      * 用于存放标题的id,与textview引用
      */
@@ -370,74 +372,74 @@ public class QueryDetailsActivity extends BaseActivity {
 
     private void setDatas(List<OnlineSaleBean> onlineSaleBeanList) {
 
-            List<TableModel> mDatas = new ArrayList<>();
-            for (int i = 0; i < onlineSaleBeanList.size(); i++) {
-                OnlineSaleBean onlineSaleBean = onlineSaleBeanList.get(i);
-                TableModel tableMode = new TableModel();
-                tableMode.setOrgCode(onlineSaleBean.getOrgCode());
-                tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
-                BigDecimal bd = null;
-                String date;
-                switch (getIntent().getStringExtra("title")) {
-                    case "汇聚按客户端查询":
-                        tableMode.setText0(beans.getData().get(i).getName());//列0内容
-                        tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
-                        tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText3("" + beans.getData().get(i).getMonth() + "");
-                        bd = new BigDecimal(beans.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+        List<TableModel> mDatas = new ArrayList<>();
+        for (int i = 0; i < onlineSaleBeanList.size(); i++) {
+            OnlineSaleBean onlineSaleBean = onlineSaleBeanList.get(i);
+            TableModel tableMode = new TableModel();
+            tableMode.setOrgCode(onlineSaleBean.getOrgCode());
+            tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
+            BigDecimal bd = null;
+            String date;
+            switch (getIntent().getStringExtra("title")) {
+                case "汇聚按客户端查询":
+                    tableMode.setText0(beans.getData().get(i).getName());//列0内容
+                    tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
+                    tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
+                    tableMode.setText3("" + beans.getData().get(i).getMonth() + "");
+                    bd = new BigDecimal(beans.getData().get(i).getRows_sum());
+                    date = bd.toPlainString();
 
-                        tableMode.setText4(date);
-                        break;
-                    case "汇聚按资源查询":
-                        tableMode.setText0(hjZYCXBean.getData().get(i).getDbcname() + "");//列1内容
-                        tableMode.setText1(hjZYCXBean.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + hjZYCXBean.getData().get(i).getMonth() + "");
-                        bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+                    tableMode.setText4(date);
+                    break;
+                case "汇聚按资源查询":
+                    tableMode.setText0(hjZYCXBean.getData().get(i).getDbcname() + "");//列1内容
+                    tableMode.setText1(hjZYCXBean.getData().get(i).getTabcname() + "");//列2内容
+                    tableMode.setText2("" + hjZYCXBean.getData().get(i).getMonth() + "");
+                    bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
+                    date = bd.toPlainString();
 
-                        tableMode.setText3(date);
-                        break;
-                    case "汇聚按单位查询":
-                        tableMode.setText0(fwDwBean.getData().get(i).getDbcname() + "");//列1内容
-                        tableMode.setText1(fwDwBean.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + fwDwBean.getData().get(i).getMonth() + "");
-                        bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+                    tableMode.setText3(date);
+                    break;
+                case "汇聚按单位查询":
+                    tableMode.setText0(fwDwBean.getData().get(i).getDbcname() + "");//列1内容
+                    tableMode.setText1(fwDwBean.getData().get(i).getTabcname() + "");//列2内容
+                    tableMode.setText2("" + fwDwBean.getData().get(i).getMonth() + "");
+                    bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
+                    date = bd.toPlainString();
 
-                        tableMode.setText3(date);
-                        break;
-                    case "服务按资源查询":
-                        tableMode.setText0(fwZYCXBean.getData().get(i).getProc_cname() + "");//列1内容
-                        tableMode.setText1(fwZYCXBean.getData().get(i).getName() + "");//列2内容
-                        tableMode.setText2("" + fwZYCXBean.getData().get(i).getMonth() + "");
-                        bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+                    tableMode.setText3(date);
+                    break;
+                case "服务按资源查询":
+                    tableMode.setText0(fwZYCXBean.getData().get(i).getProc_cname() + "");//列1内容
+                    tableMode.setText1(fwZYCXBean.getData().get(i).getName() + "");//列2内容
+                    tableMode.setText2("" + fwZYCXBean.getData().get(i).getMonth() + "");
+                    bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
+                    date = bd.toPlainString();
 
-                        tableMode.setText3(date);
-                        break;
-                    case "服务按单位查询":
-                        tableMode.setText0(fwDwCXBean.getData().get(i).getProc_cname() + "");//列1内容
-                        tableMode.setText1(fwDwCXBean.getData().get(i).getDbcname() + "");//列2内容
-                        tableMode.setText2("" + fwDwCXBean.getData().get(i).getMonth() + "");
-                        bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+                    tableMode.setText3(date);
+                    break;
+                case "服务按单位查询":
+                    tableMode.setText0(fwDwCXBean.getData().get(i).getProc_cname() + "");//列1内容
+                    tableMode.setText1(fwDwCXBean.getData().get(i).getDbcname() + "");//列2内容
+                    tableMode.setText2("" + fwDwCXBean.getData().get(i).getMonth() + "");
+                    bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
+                    date = bd.toPlainString();
 
-                        tableMode.setText3(date);
-                        break;
-                }
+                    tableMode.setText3(date);
+                    break;
+            }
 
 
 //
 //                tableMode.setText4(onlineSaleBean.getSaleAllLast() + "");
 //                tableMode.setText5(onlineSaleBean.getSaleAllOneNowLast() + "");//
 
-                mDatas.add(tableMode);
-            }
-            mLeftAdapter.addData(mDatas, false);
-            mRightAdapter.addData(mDatas, false);
+            mDatas.add(tableMode);
+        }
+        mLeftAdapter.addData(mDatas, false);
+        mRightAdapter.addData(mDatas, false);
 
-            mDatas.clear();
+        mDatas.clear();
 
     }
 
@@ -457,12 +459,13 @@ public class QueryDetailsActivity extends BaseActivity {
                 /**
                  * 查询 多级筛选
                  */
-                Intent intent=new Intent(QueryDetailsActivity.this, SearchActivity.class);
-                startActivity(intent);
-
-
-
-//                showDatePicker();
+                /*单位。客户端 ;服务、汇聚
+                 * */
+                if (getIntent().getStringExtra("title").contains("单位") || getIntent().getStringExtra("title").contains("客户端")) {
+                    Intent intent = new Intent(QueryDetailsActivity.this, SearchActivity.class);
+                    intent.putExtra("title", getIntent().getStringExtra("title"));
+                    startActivityForResult(intent, selectCode);
+                }
 
                 break;
             case R.id.action_me:
@@ -476,46 +479,20 @@ public class QueryDetailsActivity extends BaseActivity {
 
     }
 
-    private void showDatePicker() {
-        Calendar c = Calendar.getInstance();
-        new DoubleDatePickerDialog(QueryDetailsActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
 
-            @Override
-            public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear,
-                                  int startDayOfMonth, DatePicker endDatePicker, int endYear, int endMonthOfYear,
-                                  int endDayOfMonth) {
-                String startTime;
-                String endTime;
-                /**
-                 * 月份不足两位补0
-                 */
-
-                String startMonth = "" + (startMonthOfYear + 1);
-                String endMonth = "" + (endMonthOfYear + 1);
-                endMonth = endMonth.length() > 2 ? endMonth : "0" + endMonth;
-                startMonth = startMonth.length() > 2 ? startMonth : "0" + startMonth;
-//                startTime = "" + startYear + (startMonthOfYear + 1);
-//                endTime = "" + endYear + (endMonthOfYear + 1);
-                startTime = startYear + "" +
-                        startMonth;
-                endTime = endYear + "" + endMonth;
-                initNetMonth(startTime, endTime);
-
-
-
-
-
-
-
-            }
-        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), false).show();
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {//判断是否返回成功
+            initNetMonth(data.getStringExtra("id"), data.getStringExtra("startTime"), data.getStringExtra("endTime"));
+        }
     }
 
-    private void initNetMonth(String startTime, String endTime) {
+    private void initNetMonth(String id, String startTime, String endTime) {
         ArrayList<String> mListUrlPath = new ArrayList<>();
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
-                "<para><name>clientid</name > <sqldbtype>Int</sqldbtype><value>10000001</value></para> " +
+                "<para><name>clientid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para> " +
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>" + startTime + "</value></para> " +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>" + endTime + "</value></para>" +
                 "</paras>");

@@ -27,11 +27,28 @@ public class Constants {
     public static String tj_hj_resourceny = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_hj_resourceny/data";
     public static String tj_hj_dwny = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_hj_dwny/data";
     /**
-       服务
+     * 服务
      */
     public static String tj_fw_clientny = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_clientny/data";
     public static String tj_fw_resourceny = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_resourceny/data";
     public static String tj_fw_dwny = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_dwny/data";
+    /**
+     * hj客户端名称
+     */
+    public static String ydd_cx_zydl = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_zydl/data";
+    /**
+     *hj 单位名称
+     */
+    public static String ydd_cx_hjdw = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_hjdw/data";
 
+    /**
+     *fw  客户端名称
+     */
+    public static String ydd_cx_fwkhd = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_fwkhd/data";
+
+    /**
+     *fw单位名称
+     */
+    public static String ydd_cx_dwmc = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_dwmc/data";
 
 }

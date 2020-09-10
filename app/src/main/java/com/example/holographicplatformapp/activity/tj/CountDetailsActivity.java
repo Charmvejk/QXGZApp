@@ -677,8 +677,8 @@ public class CountDetailsActivity extends BaseActivity {
 
                 String startMonth = "" + (startMonthOfYear + 1);
                 String endMonth = "" + (endMonthOfYear + 1);
-                endMonth = endMonth.length() > 2 ? endMonth : "0" + endMonth;
-                startMonth = startMonth.length() > 2 ? startMonth : "0" + startMonth;
+                endMonth = endMonth.length() == 2 ? endMonth : "0" + endMonth;
+                startMonth = startMonth.length() == 2 ? startMonth : "0" + startMonth;
 //                startTime = "" + startYear + (startMonthOfYear + 1);
 //                endTime = "" + endYear + (endMonthOfYear + 1);
                 startTime = startYear + "" +
