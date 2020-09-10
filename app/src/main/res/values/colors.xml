@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="white">#fff</color>
+    <color name="blue">#3F51B5</color>
+    <color name="blue_dark">#303F9F</color>
+    <color name="gray">#999</color>
+    <color name="black">#000</color>
+    <color name="light_gray">#e8e8e8</color>
+    <color name="light_light_gray">#fafafa</color>
+
+
+    <!--渐变-->
+    <color name="light_light_green">#28C76F</color>
+    <color name="light_light_blue">#465EFB</color>
+    <color name="light_light_light_blue">#1D6FA3</color>
+    <color name="light_light_light_light_blue">#0396FF</color>
+
+
+    <!--首页颜色值
+    -->
+    <color name="light_red">#fc8675</color>
+    <color name="light_blue">#6bafbd</color>
+    <color name="deep_blue">#65a8ec</color>
+    <color name="light_green">#65cea7</color>
+</resources>

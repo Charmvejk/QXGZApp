@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+
+
+    tools:context=".fragment.MainFragment">
+
+    <ImageView
+        android:id="@+id/iv_head"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scaleType="centerCrop"
+     ></ImageView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_4"
+        android:scrollbars="none">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <com.example.holographicplatformapp.utils.MyTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="15天数据出入量"
+        android:textColor="@color/light_green"
+        android:textSize="@dimen/sp_18"
+        android:textStyle="bold">
+
+    </com.example.holographicplatformapp.utils.MyTextView>
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:paddingLeft="@dimen/dp_2"
+        android:paddingRight="@dimen/dp_4"
+        android:layout_width="match_parent"
+
+        android:layout_height="180dp"
+        android:layout_marginTop="5dp" />
+</LinearLayout>

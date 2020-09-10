@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".fragment.CatalogListFragment">
+
+    <include layout="@layout/include_toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:src="@mipmap/icon_mulu"></ImageView>
+
+            <Button
+                android:id="@+id/tv_mulu"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="left|center"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:text="资源目录"
+                android:textAllCaps="false"
+                android:textColor="@color/state_press_black"
+                android:textSize="@dimen/dp_16"
+
+                ></Button>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_marginLeft="95dp"
+            android:background="@color/gray"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:src="@mipmap/icon_fwtj"></ImageView>
+
+            <Button
+                android:id="@+id/tv_fwyh"
+                style="?borderlessButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:gravity="left|center"
+                android:text="服务用户"
+                android:textAllCaps="false"
+                android:textColor="@color/state_press_black"
+                android:textSize="@dimen/dp_16"
+
+                ></Button>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.1dp"
+            android:layout_marginLeft="95dp"
+            android:background="@color/gray"></View>
+    </LinearLayout>
+
+
+</LinearLayout>
