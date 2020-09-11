@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
 import com.example.holographicplatformapp.bean.ResourceDetailsBean;
+import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ResourceDetailsActivity extends BaseActivity {
     private List<String> list;
     private NormalAdapter adapter;
     private int record = 0;
+    CustomProgressDialog customProgressDialog;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -74,7 +76,8 @@ public class ResourceDetailsActivity extends BaseActivity {
 
     private void initNet() {
         //执行网络请求
-
+        customProgressDialog = new CustomProgressDialog(ResourceDetailsActivity.this, "");
+        customProgressDialog.show();
         new Thread() {
             @Override
             public void run() {
@@ -115,7 +118,7 @@ public class ResourceDetailsActivity extends BaseActivity {
 
 //设置增加或删除条目的动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        customProgressDialog.dismiss();
 
     }
 

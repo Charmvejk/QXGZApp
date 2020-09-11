@@ -21,6 +21,7 @@ import com.example.holographicplatformapp.activity.linecharts.LineChartManager;
 
 import com.example.holographicplatformapp.bean.FourteenDaysBean;
 import com.example.holographicplatformapp.bean.MainDatasBean;
+import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 import com.google.gson.Gson;
@@ -48,7 +49,7 @@ public class MainFragment extends BaseFragment {
     private List<Integer> mDatas2;
     private List<String> mListDate;
     private ImageView ivHead;
-
+    CustomProgressDialog customProgressDialog;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -80,6 +81,7 @@ public class MainFragment extends BaseFragment {
 
                     initCharts(mDatas1, mDatas2, mListDate);
 
+                    customProgressDialog.dismiss();
 
                     break;
             }
@@ -99,6 +101,8 @@ public class MainFragment extends BaseFragment {
         requestOptions.centerCrop(); //设置“加载失败”状态时显示的图片
         Glide.with(getActivity()).load(R.mipmap.icon_top).apply(requestOptions).into(ivHead);
 
+        customProgressDialog = new CustomProgressDialog(getActivity(), "");
+        customProgressDialog.show();
     }
 
     @Override

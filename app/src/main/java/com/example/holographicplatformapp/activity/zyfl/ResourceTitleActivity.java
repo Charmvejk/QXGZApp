@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
 import com.example.holographicplatformapp.bean.ResourceBean;
+import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import static com.example.holographicplatformapp.HttpUrls.postXml;
  * */
 public class ResourceTitleActivity extends BaseActivity {
     private RecyclerView recyclerView;
-
+    CustomProgressDialog customProgressDialog;
     ResourceBean beans = null;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -56,7 +57,7 @@ public class ResourceTitleActivity extends BaseActivity {
 
 //设置增加或删除条目的动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
+        customProgressDialog.dismiss();
 
     }
 
@@ -70,7 +71,8 @@ public class ResourceTitleActivity extends BaseActivity {
 
         mToolbarTb.setTitle("资源分类");
         //执行网络请求
-
+        customProgressDialog = new CustomProgressDialog(ResourceTitleActivity.this, "");
+        customProgressDialog.show();
         new Thread() {
             @Override
             public void run() {

@@ -1,5 +1,6 @@
 package com.example.holographicplatformapp.activity.tj;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import androidx.appcompat.widget.SearchView;
 import com.example.holographicplatformapp.MyApplication;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
+import com.example.holographicplatformapp.activity.cx.QueryDetailsActivity;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.HjDWTitlesBean;
 import com.example.holographicplatformapp.bean.HjZyTitlesBean;
@@ -35,6 +37,7 @@ import com.example.holographicplatformapp.bean.fwZyTitlesBean;
 import com.example.holographicplatformapp.bean.hj.hjDWMonthBean;
 import com.example.holographicplatformapp.bean.hj.hjKHDMonthBean;
 import com.example.holographicplatformapp.bean.hj.hjZYMonthBean;
+import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
 import com.github.promeg.pinyinhelper.Pinyin;
@@ -78,7 +81,7 @@ public class CountDetailsActivity extends BaseActivity {
     private TextView tv_table_title_3;//月份
 
     private boolean isSelectType = false;
-
+    CustomProgressDialog customProgressDialog;
 
     private hjKHDMonthBean hjKHDMonthBean;//按月
     private hjZYMonthBean hjZYMonthBean;//表头标题
@@ -102,6 +105,7 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = false;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -118,6 +122,7 @@ public class CountDetailsActivity extends BaseActivity {
                         isSelectType = true;
                         tv_table_title_4.setVisibility(View.VISIBLE);
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -130,6 +135,7 @@ public class CountDetailsActivity extends BaseActivity {
                         isSelectType = false;
 
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -142,6 +148,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_4.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
 
@@ -155,6 +162,7 @@ public class CountDetailsActivity extends BaseActivity {
 
                         isSelectType = false;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
 
@@ -170,6 +178,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
 
@@ -184,6 +193,7 @@ public class CountDetailsActivity extends BaseActivity {
 
                         isSelectType = false;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
 
@@ -197,6 +207,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
 
@@ -210,6 +221,7 @@ public class CountDetailsActivity extends BaseActivity {
 
                         isSelectType = false;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);/**/
 
 
@@ -227,6 +239,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
+                    mP.clear();
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -241,6 +254,8 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
+                    mP.clear();
+
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -260,7 +275,8 @@ public class CountDetailsActivity extends BaseActivity {
     }
 
     private void initNet() {
-
+        customProgressDialog = new CustomProgressDialog(CountDetailsActivity.this, "");
+        customProgressDialog.show();
         new Thread() {
             @Override
             public void run() {
@@ -605,7 +621,7 @@ public class CountDetailsActivity extends BaseActivity {
     private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP) {
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
-
+            String finaDate;
             TableModel tableMode = new TableModel();
 
             tableMode.setLeftTitle(onlineSaleBeanList.get(i).getCompanyName());
@@ -617,16 +633,19 @@ public class CountDetailsActivity extends BaseActivity {
                     if (isSelectType) {
 
                         if (mP.size() == 0) {
+                            finaDate = "" + hjKHDMonthBean.getData().get(i).getMonth();
+
                             tableMode.setText0(hjKHDMonthBean.getData().get(i).getName());//列0内容
                             tableMode.setText1(hjKHDMonthBean.getData().get(i).getDbcname() + "");//列1内容
                             tableMode.setText2(hjKHDMonthBean.getData().get(i).getTabcname() + "");//列2内容
                             bd = new BigDecimal(hjKHDMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4("" + hjKHDMonthBean.getData().get(i).getMonth() + "");//列2内容
+                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
 
                         } else {
 
+                            finaDate = "" + hjKHDMonthBean.getData().get(mP.get(i)).getMonth();
 
                             tableMode.setText0(hjKHDMonthBean.getData().get(mP.get(i)).getName());//列0内容
                             tableMode.setText1(hjKHDMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
@@ -634,12 +653,13 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4("" + hjKHDMonthBean.getData().get(mP.get(i)).getMonth() + "");//列2内容
+                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
 
                         }
 
                     } else {
                         if (mP.size() == 0) {
+
                             tableMode.setText0(beans.getData().get(i).getName());//列0内容
                             tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
                             tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
@@ -660,6 +680,7 @@ public class CountDetailsActivity extends BaseActivity {
                     if (isSelectType) {
 
                         if (mP.size() == 0) {
+                            finaDate = "" + ffwKHDMonthBean.getData().get(i).getMonth();
 
                             tableMode.setText0(ffwKHDMonthBean.getData().get(i).getDbcname());//列0内容
                             tableMode.setText1(ffwKHDMonthBean.getData().get(i).getName() + "");//列1内容
@@ -667,16 +688,17 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(ffwKHDMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4("" + ffwKHDMonthBean.getData().get(i).getMonth());
-                        } else {
+                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
 
+                        } else {
+                            finaDate = "" + ffwKHDMonthBean.getData().get(mP.get(i)).getMonth();
                             tableMode.setText0(ffwKHDMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
                             tableMode.setText1(ffwKHDMonthBean.getData().get(mP.get(i)).getName() + "");//列1内容
                             tableMode.setText2(ffwKHDMonthBean.getData().get(mP.get(i)).getProc_cname() + "");//列2内容
                             bd = new BigDecimal(ffwKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4("" + ffwKHDMonthBean.getData().get(mP.get(i)).getMonth());
+                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         }
 
 
@@ -707,22 +729,23 @@ public class CountDetailsActivity extends BaseActivity {
                     if (isSelectType) {
 
                         if (mP.size() == 0) {
+                            finaDate = "" + hjZYMonthBean.getData().get(i).getMonth();
 
                             tableMode.setText0(hjZYMonthBean.getData().get(i).getDbcname());//列0内容
                             tableMode.setText1(hjZYMonthBean.getData().get(i).getTabcname() + "");//列1内容
                             bd = new BigDecimal(hjZYMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + hjZYMonthBean.getData().get(i).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         } else {
 
-
+                            finaDate = "" + hjZYMonthBean.getData().get(mP.get(i)).getMonth();
                             tableMode.setText0(hjZYMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
                             tableMode.setText1(hjZYMonthBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
                             bd = new BigDecimal(hjZYMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + hjZYMonthBean.getData().get(mP.get(i)).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         }
 
 
@@ -751,21 +774,23 @@ public class CountDetailsActivity extends BaseActivity {
 
                     if (isSelectType) {
                         if (mP.size() == 0) {
+                            finaDate = "" + fwZYMonthBean.getData().get(i).getMonth();
 
                             tableMode.setText0(fwZYMonthBean.getData().get(i).getProc_cname());//列0内容
                             tableMode.setText1(fwZYMonthBean.getData().get(i).getDbcname() + "");//列1内容
                             bd = new BigDecimal(fwZYMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + fwZYMonthBean.getData().get(i).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         } else {
+                            finaDate = "" + fwZYMonthBean.getData().get(mP.get(i)).getMonth();
 
                             tableMode.setText0(fwZYMonthBean.getData().get(mP.get(i)).getProc_cname());//列0内容
                             tableMode.setText1(fwZYMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
                             bd = new BigDecimal(fwZYMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + fwZYMonthBean.getData().get(mP.get(i)).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         }
 
 
@@ -794,21 +819,22 @@ public class CountDetailsActivity extends BaseActivity {
 
 
                         if (mP.size() == 0) {
+                            finaDate = "" + fwDWMonthBean.getData().get(i).getMonth();
 
                             tableMode.setText0(fwDWMonthBean.getData().get(i).getProc_cname());//列0内容
                             tableMode.setText1(fwDWMonthBean.getData().get(i).getDbcname() + "");//列1内容
                             bd = new BigDecimal(fwDWMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + fwDWMonthBean.getData().get(i).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         } else {
-
+                            finaDate = "" + fwDWMonthBean.getData().get(mP.get(i)).getMonth();
                             tableMode.setText0(fwDWMonthBean.getData().get(mP.get(i)).getProc_cname());//列0内容
                             tableMode.setText1(fwDWMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
                             bd = new BigDecimal(fwDWMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + fwDWMonthBean.getData().get(mP.get(i)).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         }
 
 
@@ -835,22 +861,23 @@ public class CountDetailsActivity extends BaseActivity {
                     if (isSelectType) {
 
                         if (mP.size() == 0) {
+                            finaDate = "" + hjDWMonthBean.getData().get(i).getMonth();
 
                             tableMode.setText0(hjDWMonthBean.getData().get(i).getDbcname());//列0内容
                             tableMode.setText1(hjDWMonthBean.getData().get(i).getTabcname() + "");//列1内容
                             bd = new BigDecimal(hjDWMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + hjDWMonthBean.getData().get(i).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         } else {
-
+                            finaDate = "" + hjDWMonthBean.getData().get(mP.get(i)).getMonth();
 
                             tableMode.setText0(hjDWMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
                             tableMode.setText1(hjDWMonthBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
                             bd = new BigDecimal(hjDWMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3("" + hjDWMonthBean.getData().get(mP.get(i)).getMonth());
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
                         }
 
 
@@ -885,7 +912,7 @@ public class CountDetailsActivity extends BaseActivity {
         }
         mLeftAdapter.addData(mDatas, false);
         mRightAdapter.addData(mDatas, false);
-
+        customProgressDialog.dismiss();
         mDatas.clear();
 
     }
@@ -941,7 +968,8 @@ public class CountDetailsActivity extends BaseActivity {
     }
 
     private void initNetMonth(String startTime, String endTime) {
-
+        customProgressDialog = new CustomProgressDialog(CountDetailsActivity.this, "");
+        customProgressDialog.show();
         new Thread() {
             @Override
             public void run() {

@@ -175,8 +175,8 @@ public class LineChartManager {
         axisRight.setDrawLabels(false);
 
         //设置动画效果
-        lineChart.animateY(2000, Easing.EasingOption.Linear);
-        lineChart.animateX(2000, Easing.EasingOption.Linear);
+        lineChart.animateY(2000, Easing.EasingOption.EaseOutCubic);
+        lineChart.animateX(2000, Easing.EasingOption.EaseOutCubic);
         lineChart.invalidate();
         //lineChart.animateX(2500);  //立即执行动画
     }

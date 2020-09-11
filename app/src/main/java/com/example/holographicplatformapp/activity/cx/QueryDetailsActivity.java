@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,10 +15,13 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SearchView;
+
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
 import com.example.holographicplatformapp.activity.dtjcx.SearchActivity;
 import com.example.holographicplatformapp.activity.tj.CountDetailsActivity;
+import com.example.holographicplatformapp.activity.zyfl.ResourceTitleActivity;
 import com.example.holographicplatformapp.adapter.AbsCommonAdapter;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.OnlineSaleBean;
@@ -27,8 +31,11 @@ import com.example.holographicplatformapp.bean.fwDwCXBean;
 import com.example.holographicplatformapp.bean.fwKHDBean;
 import com.example.holographicplatformapp.bean.fwZYCXBean;
 import com.example.holographicplatformapp.bean.hjZYCXBean;
+import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
+import com.example.holographicplatformapp.utils.TimeUtils;
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
@@ -57,8 +64,11 @@ public class QueryDetailsActivity extends BaseActivity {
     private AbsCommonAdapter<TableModel> mLeftAdapter, mRightAdapter;
     private SyncHorizontalScrollView titleHorScv;
     private SyncHorizontalScrollView contentHorScv;
+    CustomProgressDialog customProgressDialog;
 
-
+    /*主要筛选过滤*/
+    private int record = 0;
+    private List<Integer> mP = new ArrayList<>();
     List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -69,8 +79,8 @@ public class QueryDetailsActivity extends BaseActivity {
                     for (int i = 0; i < beans.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(beans.getData().get(i).getSystemname()));
                     }
-
-                    setDatas(onlineSaleBeanList);
+                    mP.clear();
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 999:
@@ -78,8 +88,8 @@ public class QueryDetailsActivity extends BaseActivity {
                     for (int i = 0; i < hjZYCXBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjZYCXBean.getData().get(i).getName()));
                     }
-
-                    setDatas(onlineSaleBeanList);
+                    mP.clear();
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 000:
@@ -87,8 +97,8 @@ public class QueryDetailsActivity extends BaseActivity {
                     for (int i = 0; i < fwDwBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwDwBean.getData().get(i).getName()));
                     }
-
-                    setDatas(onlineSaleBeanList);
+                    mP.clear();
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 1000:
@@ -96,8 +106,8 @@ public class QueryDetailsActivity extends BaseActivity {
                     for (int i = 0; i < fwZYCXBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwZYCXBean.getData().get(i).getDbcname()));
                     }
-
-                    setDatas(onlineSaleBeanList);
+                    mP.clear();
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 6000:
@@ -105,8 +115,8 @@ public class QueryDetailsActivity extends BaseActivity {
                     for (int i = 0; i < fwDwCXBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwDwCXBean.getData().get(i).getName()));
                     }
-
-                    setDatas(onlineSaleBeanList);
+                    mP.clear();
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
             }
@@ -123,6 +133,8 @@ public class QueryDetailsActivity extends BaseActivity {
     }
 
     private void initNet() {
+        customProgressDialog = new CustomProgressDialog(QueryDetailsActivity.this, "");
+        customProgressDialog.show();
         ArrayList<String> mListUrlPath = new ArrayList<>();
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
@@ -216,7 +228,62 @@ public class QueryDetailsActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_select_type2, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint(tv_table_title_left.getText().toString());
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {  // 点击软件盘搜索按钮会弹出 吐司
+
+                return false;
+            }
+
+            // 搜索框文本改变事件
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // 文本内容是空就让 recyclerView 填充全部数据 // 可以是其他容器 如listView
+
+                filterData(s);
+                return false;
+            }
+        });
         return true;
+    }
+
+    /**
+     * 根据输入框中的值来过滤数据并更新RecyclerView
+     *
+     * @param filterStr
+     */
+    private void filterData(String filterStr) {
+        List<OnlineSaleBean> filterDateList = new ArrayList<>();
+
+        if (TextUtils.isEmpty(filterStr)) {
+            mP.clear();
+            record = 0;
+            filterDateList = onlineSaleBeanList;
+        } else {
+            filterDateList.clear();
+            mP.clear();
+            record = 0;
+            for (OnlineSaleBean sortModel : onlineSaleBeanList) {
+                String name = sortModel.getCompanyName();
+                /**
+                 * 后期首字母
+                 */
+                if (name.indexOf(filterStr.toString()) != -1 ||
+                        Pinyin.toPinyin(name, "/").startsWith(filterStr.toString())
+
+                ) {
+                    filterDateList.add(sortModel);
+                    mP.add(record);
+
+                }
+                record += 1;
+            }
+        }
+
+        setDatas(filterDateList, mP);
+        mLeftAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -377,63 +444,161 @@ public class QueryDetailsActivity extends BaseActivity {
         rightListView.setAdapter(mRightAdapter);
     }
 
-    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList) {
+    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP) {
 
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
             OnlineSaleBean onlineSaleBean = onlineSaleBeanList.get(i);
             TableModel tableMode = new TableModel();
-            tableMode.setOrgCode(onlineSaleBean.getOrgCode());
+
             tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
             tableMode.setXuhao("" + (i + 1));
             BigDecimal bd = null;
             String date;
             switch (getIntent().getStringExtra("title")) {
-                case "汇聚按客户端查询":
-                    tableMode.setText0(beans.getData().get(i).getName());//列0内容
-                    tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
-                    tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
-                    tableMode.setText3("" + beans.getData().get(i).getMonth() + "");
-                    bd = new BigDecimal(beans.getData().get(i).getRows_sum());
-                    date = bd.toPlainString();
 
-                    tableMode.setText4(date);
+                case "汇聚按客户端查询":
+                    String finaDate;
+
+
+                    if (mP.size() == 0) {
+                        finaDate = "" + beans.getData().get(i).getMonth();
+                        tableMode.setText0(beans.getData().get(i).getName());//列0内容
+                        tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
+                        tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
+                        tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                        bd = new BigDecimal(beans.getData().get(i).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText4(date);
+
+                    } else {
+                        finaDate = "" + beans.getData().get(mP.get(i)).getMonth();
+                        tableMode.setText0(beans.getData().get(mP.get(i)).getName());//列0内容
+                        tableMode.setText1(beans.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                        tableMode.setText2(beans.getData().get(mP.get(i)).getTabcname() + "");//列2内容
+
+                        tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        bd = new BigDecimal(beans.getData().get(mP.get(i)).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText4(date);
+
+
+                    }
                     break;
                 case "汇聚按资源查询":
-                    tableMode.setText0(hjZYCXBean.getData().get(i).getDbcname() + "");//列1内容
-                    tableMode.setText1(hjZYCXBean.getData().get(i).getTabcname() + "");//列2内容
-                    tableMode.setText2("" + hjZYCXBean.getData().get(i).getMonth() + "");
-                    bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
-                    date = bd.toPlainString();
 
-                    tableMode.setText3(date);
+
+                    if (mP.size() == 0) {
+                        finaDate = "" + hjZYCXBean.getData().get(i).getMonth();
+                        tableMode.setText0(hjZYCXBean.getData().get(i).getDbcname() + "");//列1内容
+                        tableMode.setText1(hjZYCXBean.getData().get(i).getTabcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+                    } else {
+                        finaDate = "" + hjZYCXBean.getData().get(mP.get(i)).getMonth();
+                        tableMode.setText0(hjZYCXBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                        tableMode.setText1(hjZYCXBean.getData().get(mP.get(i)).getTabcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(hjZYCXBean.getData().get(mP.get(i)).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+                    }
+
+
                     break;
                 case "汇聚按单位查询":
-                    tableMode.setText0(fwDwBean.getData().get(i).getDbcname() + "");//列1内容
-                    tableMode.setText1(fwDwBean.getData().get(i).getTabcname() + "");//列2内容
-                    tableMode.setText2("" + fwDwBean.getData().get(i).getMonth() + "");
-                    bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
-                    date = bd.toPlainString();
 
-                    tableMode.setText3(date);
+
+                    if (mP.size() == 0) {
+                        finaDate = "" + fwDwBean.getData().get(i).getMonth();
+                        tableMode.setText0(fwDwBean.getData().get(i).getDbcname() + "");//列1内容
+                        tableMode.setText1(fwDwBean.getData().get(i).getTabcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+
+                    } else {
+                        finaDate = "" + fwDwBean.getData().get(mP.get(i)).getMonth();
+                        tableMode.setText0(fwDwBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                        tableMode.setText1(fwDwBean.getData().get(mP.get(i)).getTabcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwDwBean.getData().get(mP.get(i)).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+
+                    }
+
+
                     break;
                 case "服务按资源查询":
-                    tableMode.setText0(fwZYCXBean.getData().get(i).getProc_cname() + "");//列1内容
-                    tableMode.setText1(fwZYCXBean.getData().get(i).getName() + "");//列2内容
-                    tableMode.setText2("" + fwZYCXBean.getData().get(i).getMonth() + "");
-                    bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
-                    date = bd.toPlainString();
 
-                    tableMode.setText3(date);
+
+                    if (mP.size() == 0) {
+                        finaDate = "" + fwZYCXBean.getData().get(i).getMonth();
+
+                        tableMode.setText0(fwZYCXBean.getData().get(i).getProc_cname() + "");//列1内容
+                        tableMode.setText1(fwZYCXBean.getData().get(i).getName() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+
+                    } else {
+
+                        finaDate = "" + fwZYCXBean.getData().get(mP.get(i)).getMonth();
+
+                        tableMode.setText0(fwZYCXBean.getData().get(mP.get(i)).getProc_cname() + "");//列1内容
+                        tableMode.setText1(fwZYCXBean.getData().get(mP.get(i)).getName() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwZYCXBean.getData().get(mP.get(i)).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+                    }
                     break;
                 case "服务按单位查询":
-                    tableMode.setText0(fwDwCXBean.getData().get(i).getProc_cname() + "");//列1内容
-                    tableMode.setText1(fwDwCXBean.getData().get(i).getDbcname() + "");//列2内容
-                    tableMode.setText2("" + fwDwCXBean.getData().get(i).getMonth() + "");
-                    bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
-                    date = bd.toPlainString();
 
-                    tableMode.setText3(date);
+
+                    if (mP.size() == 0) {
+                        finaDate = "" + fwDwCXBean.getData().get(i).getMonth();
+
+                        tableMode.setText0(fwDwCXBean.getData().get(i).getProc_cname() + "");//列1内容
+                        tableMode.setText1(fwDwCXBean.getData().get(i).getDbcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+
+
+                    } else {
+
+                        finaDate = "" + fwDwCXBean.getData().get(mP.get(i)).getMonth();
+
+                        tableMode.setText0(fwDwCXBean.getData().get(mP.get(i)).getProc_cname() + "");//列1内容
+                        tableMode.setText1(fwDwCXBean.getData().get(mP.get(i)).getDbcname() + "");//列2内容
+                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
+                        bd = new BigDecimal(fwDwCXBean.getData().get(mP.get(i)).getRows_sum());
+                        date = bd.toPlainString();
+
+                        tableMode.setText3(date);
+                    }
                     break;
             }
 
@@ -446,7 +611,7 @@ public class QueryDetailsActivity extends BaseActivity {
         }
         mLeftAdapter.addData(mDatas, false);
         mRightAdapter.addData(mDatas, false);
-
+        customProgressDialog.dismiss();
         mDatas.clear();
 
     }
@@ -498,6 +663,8 @@ public class QueryDetailsActivity extends BaseActivity {
 
     private void initNetMonth(String id, String startTime, String endTime) {
         ArrayList<String> mListUrlPath = new ArrayList<>();
+        customProgressDialog = new CustomProgressDialog(QueryDetailsActivity.this, "");
+        customProgressDialog.show();
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>clientid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para> " +
