@@ -317,6 +317,7 @@ public class ResourceDetailsActivity extends BaseActivity {
             refreshUI();
         } else {
             mP = new ArrayList<>();
+            mP.clear();
             //如果edittext里面有数据 则根据edittext里面的数据进行匹配 用contains判断是否包含该条数据 包含的话则加入到list中
             for (String i : wholeList) {
                 if (i.contains(text)) {

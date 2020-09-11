@@ -3,7 +3,7 @@ package com.example.holographicplatformapp.activity.tj;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,8 +21,6 @@ import androidx.appcompat.widget.SearchView;
 import com.example.holographicplatformapp.MyApplication;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
-import com.example.holographicplatformapp.activity.zyfl.ResourceDetailsActivity;
-import com.example.holographicplatformapp.adapter.AbsCommonAdapter;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.HjDWTitlesBean;
 import com.example.holographicplatformapp.bean.HjZyTitlesBean;
@@ -39,14 +37,13 @@ import com.example.holographicplatformapp.bean.hj.hjKHDMonthBean;
 import com.example.holographicplatformapp.bean.hj.hjZYMonthBean;
 import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 import static com.example.holographicplatformapp.HttpUrls.postXml;
@@ -77,7 +74,6 @@ public class CountDetailsActivity extends BaseActivity {
     private fwDWMonthBean fwDWMonthBean;//表头标题
 
 
-
     private TextView tv_table_title_4;//月份
     private TextView tv_table_title_3;//月份
 
@@ -87,7 +83,9 @@ public class CountDetailsActivity extends BaseActivity {
     private hjKHDMonthBean hjKHDMonthBean;//按月
     private hjZYMonthBean hjZYMonthBean;//表头标题
 
-
+    /*主要筛选过滤*/
+    private int record = 0;
+    private List<Integer> mP = new ArrayList<>();
     List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -104,7 +102,7 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = false;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 777:
@@ -120,7 +118,7 @@ public class CountDetailsActivity extends BaseActivity {
                         isSelectType = true;
                         tv_table_title_4.setVisibility(View.VISIBLE);
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 1000:
@@ -128,8 +126,24 @@ public class CountDetailsActivity extends BaseActivity {
                     for (int i = 0; i < fwKHTitlesBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwKHTitlesBean.getData().get(i).getSystemname()));
                     }
+                    if (onlineSaleBeanList.size() != 0) {
+                        isSelectType = false;
 
-                    setDatas(onlineSaleBeanList);
+                    }
+                    setDatas(onlineSaleBeanList, mP);
+
+                    break;
+                case 111000:
+                    onlineSaleBeanList.clear();
+                    for (int i = 0; i < ffwKHDMonthBean.getData().size(); i++) {
+                        onlineSaleBeanList.add(new OnlineSaleBean(ffwKHDMonthBean.getData().get(i).getName()));
+                    }
+                    if (onlineSaleBeanList.size() != 0) {
+                        tv_table_title_4.setVisibility(View.VISIBLE);
+                        isSelectType = true;
+                    }
+                    setDatas(onlineSaleBeanList, mP);
+
 
                     break;
                 case 999:
@@ -137,8 +151,11 @@ public class CountDetailsActivity extends BaseActivity {
                     for (int i = 0; i < hjZyTitlesBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjZyTitlesBean.getData().get(i).getName()));
                     }
+                    if (onlineSaleBeanList.size() != 0) {
 
-                    setDatas(onlineSaleBeanList);
+                        isSelectType = false;
+                    }
+                    setDatas(onlineSaleBeanList, mP);
 
 
                     break;
@@ -153,7 +170,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
 
                     break;
@@ -163,31 +180,11 @@ public class CountDetailsActivity extends BaseActivity {
                     for (int i = 0; i < fwZyTitlesBean.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwZyTitlesBean.getData().get(i).getName()));
                     }
-
-                    setDatas(onlineSaleBeanList);
-
-
-                    break;
-                case 000:
-                    onlineSaleBeanList.clear();
-                    for (int i = 0; i < hjDWTitlesBean.getData().size(); i++) {
-                        onlineSaleBeanList.add(new OnlineSaleBean(hjDWTitlesBean.getData().get(i).getName()));
-                    }
-
-                    setDatas(onlineSaleBeanList);/**/
-
-
-                    break;
-                case 111000:
-                    onlineSaleBeanList.clear();
-                    for (int i = 0; i < ffwKHDMonthBean.getData().size(); i++) {
-                        onlineSaleBeanList.add(new OnlineSaleBean(ffwKHDMonthBean.getData().get(i).getName()));
-                    }
                     if (onlineSaleBeanList.size() != 0) {
-                        tv_table_title_4.setVisibility(View.VISIBLE);
-                        isSelectType = true;
+
+                        isSelectType = false;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
 
                     break;
@@ -200,10 +197,25 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
 
                     break;
+                case 000:
+                    onlineSaleBeanList.clear();
+                    for (int i = 0; i < hjDWTitlesBean.getData().size(); i++) {
+                        onlineSaleBeanList.add(new OnlineSaleBean(hjDWTitlesBean.getData().get(i).getName()));
+                    }
+                    if (onlineSaleBeanList.size() != 0) {
+
+                        isSelectType = false;
+                    }
+                    setDatas(onlineSaleBeanList, mP);/**/
+
+
+                    break;
+
+
                 case 000123:
                     onlineSaleBeanList.clear();
 
@@ -215,7 +227,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
                 case 9988:
@@ -229,7 +241,7 @@ public class CountDetailsActivity extends BaseActivity {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
                     }
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList, mP);
 
                     break;
             }
@@ -241,7 +253,6 @@ public class CountDetailsActivity extends BaseActivity {
 
     @Override
     protected void initDatas() {
-
 
         initNet();
         mToolbarTb.setTitle(getIntent().getStringExtra("title"));
@@ -532,7 +543,7 @@ public class CountDetailsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_select_type, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint("客户端名称");
+        searchView.setQueryHint(tv_table_title_left.getText().toString());
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {  // 点击软件盘搜索按钮会弹出 吐司
@@ -545,9 +556,7 @@ public class CountDetailsActivity extends BaseActivity {
             public boolean onQueryTextChange(String s) {
                 // 文本内容是空就让 recyclerView 填充全部数据 // 可以是其他容器 如listView
 
-                //匹配文字 变色SS
-                //匹配文字 变色
-
+                filterData(s);
                 return false;
             }
         });
@@ -555,10 +564,45 @@ public class CountDetailsActivity extends BaseActivity {
 
     }
 
+    /**
+     * 根据输入框中的值来过滤数据并更新RecyclerView
+     *
+     * @param filterStr
+     */
+    private void filterData(String filterStr) {
+        List<OnlineSaleBean> filterDateList = new ArrayList<>();
+
+        if (TextUtils.isEmpty(filterStr)) {
+            mP.clear();
+            record = 0;
+            filterDateList = onlineSaleBeanList;
+        } else {
+            filterDateList.clear();
+            mP.clear();
+            record = 0;
+            for (OnlineSaleBean sortModel : onlineSaleBeanList) {
+                String name = sortModel.getCompanyName();
+                /**
+                 * 后期首字母
+                 */
+                if (name.indexOf(filterStr.toString()) != -1 ||
+                        Pinyin.toPinyin(name, "/").startsWith(filterStr.toString())
+
+                ) {
+                    filterDateList.add(sortModel);
+                    mP.add(record);
+
+                }
+                record += 1;
+            }
+        }
+
+        setDatas(filterDateList, mP);
+        mLeftAdapter.notifyDataSetChanged();
+    }
 
 
-
-    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList) {
+    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP) {
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
 
@@ -571,111 +615,267 @@ public class CountDetailsActivity extends BaseActivity {
             switch (getIntent().getStringExtra("title")) {
                 case "汇聚按客户端统计":
                     if (isSelectType) {
-                        tableMode.setText0(hjKHDMonthBean.getData().get(i).getName());//列0内容
-                        tableMode.setText1(hjKHDMonthBean.getData().get(i).getDbcname() + "");//列1内容
-                        tableMode.setText2(hjKHDMonthBean.getData().get(i).getTabcname() + "");//列2内容
-                        bd = new BigDecimal(hjKHDMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText3(count);
-                        tableMode.setText4("" + hjKHDMonthBean.getData().get(i).getMonth() + "");//列2内容
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(hjKHDMonthBean.getData().get(i).getName());//列0内容
+                            tableMode.setText1(hjKHDMonthBean.getData().get(i).getDbcname() + "");//列1内容
+                            tableMode.setText2(hjKHDMonthBean.getData().get(i).getTabcname() + "");//列2内容
+                            bd = new BigDecimal(hjKHDMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                            tableMode.setText4("" + hjKHDMonthBean.getData().get(i).getMonth() + "");//列2内容
+
+                        } else {
+
+
+                            tableMode.setText0(hjKHDMonthBean.getData().get(mP.get(i)).getName());//列0内容
+                            tableMode.setText1(hjKHDMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            tableMode.setText2(hjKHDMonthBean.getData().get(mP.get(i)).getTabcname() + "");//列2内容
+                            bd = new BigDecimal(hjKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                            tableMode.setText4("" + hjKHDMonthBean.getData().get(mP.get(i)).getMonth() + "");//列2内容
+
+                        }
+
                     } else {
-                        tableMode.setText0(beans.getData().get(i).getName());//列0内容
-                        tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
-                        tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
-                        bd = new BigDecimal(beans.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText3(count);
+                        if (mP.size() == 0) {
+                            tableMode.setText0(beans.getData().get(i).getName());//列0内容
+                            tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
+                            tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
+                            bd = new BigDecimal(beans.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                        } else {
+                            tableMode.setText0(beans.getData().get(mP.get(i)).getName());//列0内容
+                            tableMode.setText1(beans.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            tableMode.setText2(beans.getData().get(mP.get(i)).getTabcname() + "");//列2内容
+                            bd = new BigDecimal(beans.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                        }
                     }
                     break;
                 case "服务按客户端统计":
                     if (isSelectType) {
-                        tableMode.setText0(ffwKHDMonthBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(ffwKHDMonthBean.getData().get(i).getName() + "");//列1内容
-                        tableMode.setText2(ffwKHDMonthBean.getData().get(i).getProc_cname() + "");//列2内容
-                        bd = new BigDecimal(ffwKHDMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText3(count);
-                        tableMode.setText4("" + ffwKHDMonthBean.getData().get(i).getMonth());
+
+                        if (mP.size() == 0) {
+
+                            tableMode.setText0(ffwKHDMonthBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(ffwKHDMonthBean.getData().get(i).getName() + "");//列1内容
+                            tableMode.setText2(ffwKHDMonthBean.getData().get(i).getProc_cname() + "");//列2内容
+                            bd = new BigDecimal(ffwKHDMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                            tableMode.setText4("" + ffwKHDMonthBean.getData().get(i).getMonth());
+                        } else {
+
+                            tableMode.setText0(ffwKHDMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(ffwKHDMonthBean.getData().get(mP.get(i)).getName() + "");//列1内容
+                            tableMode.setText2(ffwKHDMonthBean.getData().get(mP.get(i)).getProc_cname() + "");//列2内容
+                            bd = new BigDecimal(ffwKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                            tableMode.setText4("" + ffwKHDMonthBean.getData().get(mP.get(i)).getMonth());
+                        }
+
+
                     } else {
-                        tableMode.setText0(fwKHTitlesBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(fwKHTitlesBean.getData().get(i).getName() + "");//列1内容
-                        tableMode.setText2(fwKHTitlesBean.getData().get(i).getProc_cname() + "");//列2内容
-                        bd = new BigDecimal(fwKHTitlesBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText3(count);
+
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(fwKHTitlesBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(fwKHTitlesBean.getData().get(i).getName() + "");//列1内容
+                            tableMode.setText2(fwKHTitlesBean.getData().get(i).getProc_cname() + "");//列2内容
+                            bd = new BigDecimal(fwKHTitlesBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                        } else {
+
+                            tableMode.setText0(fwKHTitlesBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(fwKHTitlesBean.getData().get(mP.get(i)).getName() + "");//列1内容
+                            tableMode.setText2(fwKHTitlesBean.getData().get(mP.get(i)).getProc_cname() + "");//列2内容
+                            bd = new BigDecimal(fwKHTitlesBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText3(count);
+                        }
+
+
                     }
                     break;
                 case "汇聚按资源统计":
                     if (isSelectType) {
-                        tableMode.setText0(hjZYMonthBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(hjZYMonthBean.getData().get(i).getTabcname() + "");//列1内容
-                        bd = new BigDecimal(hjZYMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
-                        tableMode.setText3("" + hjZYMonthBean.getData().get(i).getMonth());
+
+                        if (mP.size() == 0) {
+
+                            tableMode.setText0(hjZYMonthBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(hjZYMonthBean.getData().get(i).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjZYMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + hjZYMonthBean.getData().get(i).getMonth());
+                        } else {
+
+
+                            tableMode.setText0(hjZYMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(hjZYMonthBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjZYMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + hjZYMonthBean.getData().get(mP.get(i)).getMonth());
+                        }
+
+
                     } else {
-                        tableMode.setText0(hjZyTitlesBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(hjZyTitlesBean.getData().get(i).getTabcname() + "");//列1内容
-                        bd = new BigDecimal(hjZyTitlesBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
+
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(hjZyTitlesBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(hjZyTitlesBean.getData().get(i).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjZyTitlesBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        } else {
+
+                            tableMode.setText0(hjZyTitlesBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(hjZyTitlesBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjZyTitlesBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        }
+
+
                     }
                     break;
                 case "服务按资源统计":
 
                     if (isSelectType) {
-                        tableMode.setText0(fwZYMonthBean.getData().get(i).getProc_cname());//列0内容
-                        tableMode.setText1(fwZYMonthBean.getData().get(i).getDbcname() + "");//列1内容
-                        bd = new BigDecimal(fwZYMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
-                        tableMode.setText3("" + fwZYMonthBean.getData().get(i).getMonth());
+                        if (mP.size() == 0) {
+
+                            tableMode.setText0(fwZYMonthBean.getData().get(i).getProc_cname());//列0内容
+                            tableMode.setText1(fwZYMonthBean.getData().get(i).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZYMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + fwZYMonthBean.getData().get(i).getMonth());
+                        } else {
+
+                            tableMode.setText0(fwZYMonthBean.getData().get(mP.get(i)).getProc_cname());//列0内容
+                            tableMode.setText1(fwZYMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZYMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + fwZYMonthBean.getData().get(mP.get(i)).getMonth());
+                        }
+
+
                     } else {
-                        tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
-                        tableMode.setText1(fwZyTitlesBean.getData().get(i).getDbcname() + "");//列1内容
-                        bd = new BigDecimal(fwZyTitlesBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
+
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
+                            tableMode.setText1(fwZyTitlesBean.getData().get(i).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZyTitlesBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        } else {
+
+                            tableMode.setText0(fwZyTitlesBean.getData().get(mP.get(i)).getProc_cname());//列0内容
+                            tableMode.setText1(fwZyTitlesBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZyTitlesBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        }
                     }
                     break;
                 case "服务按单位统计":
 
                     if (isSelectType) {
-                        tableMode.setText0(fwDWMonthBean.getData().get(i).getProc_cname());//列0内容
-                        tableMode.setText1(fwDWMonthBean.getData().get(i).getDbcname() + "");//列1内容
-                        bd = new BigDecimal(fwDWMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
-                        tableMode.setText3("" + fwDWMonthBean.getData().get(i).getMonth());
+
+
+                        if (mP.size() == 0) {
+
+                            tableMode.setText0(fwDWMonthBean.getData().get(i).getProc_cname());//列0内容
+                            tableMode.setText1(fwDWMonthBean.getData().get(i).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwDWMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + fwDWMonthBean.getData().get(i).getMonth());
+                        } else {
+
+                            tableMode.setText0(fwDWMonthBean.getData().get(mP.get(i)).getProc_cname());//列0内容
+                            tableMode.setText1(fwDWMonthBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwDWMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + fwDWMonthBean.getData().get(mP.get(i)).getMonth());
+                        }
+
 
                     } else {
-                        tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
-                        tableMode.setText1(fwZyTitlesBean.getData().get(i).getDbcname() + "");//列1内容
-                        bd = new BigDecimal(fwZyTitlesBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
+
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
+                            tableMode.setText1(fwZyTitlesBean.getData().get(i).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZyTitlesBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        } else {
+
+                            tableMode.setText0(fwZyTitlesBean.getData().get(mP.get(i)).getProc_cname());//列0内容
+                            tableMode.setText1(fwZyTitlesBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
+                            bd = new BigDecimal(fwZyTitlesBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        }
                     }
                     break;
                 case "汇聚按单位统计":
                     if (isSelectType) {
-                        tableMode.setText0(hjDWMonthBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(hjDWMonthBean.getData().get(i).getTabcname() + "");//列1内容
-                        bd = new BigDecimal(hjDWMonthBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
-                        tableMode.setText3("" + hjDWMonthBean.getData().get(i).getMonth());
+
+                        if (mP.size() == 0) {
+
+                            tableMode.setText0(hjDWMonthBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(hjDWMonthBean.getData().get(i).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjDWMonthBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + hjDWMonthBean.getData().get(i).getMonth());
+                        } else {
+
+
+                            tableMode.setText0(hjDWMonthBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(hjDWMonthBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjDWMonthBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                            tableMode.setText3("" + hjDWMonthBean.getData().get(mP.get(i)).getMonth());
+                        }
+
+
                     } else {
-                        tableMode.setText0(hjDWTitlesBean.getData().get(i).getDbcname());//列0内容
-                        tableMode.setText1(hjDWTitlesBean.getData().get(i).getTabcname() + "");//列1内容
-                        bd = new BigDecimal(hjDWTitlesBean.getData().get(i).getRows_sum());
-                        count = bd.toPlainString();
-                        tableMode.setText2(count);
+
+
+                        if (mP.size() == 0) {
+                            tableMode.setText0(hjDWTitlesBean.getData().get(i).getDbcname());//列0内容
+                            tableMode.setText1(hjDWTitlesBean.getData().get(i).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjDWTitlesBean.getData().get(i).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        } else {
+
+                            tableMode.setText0(hjDWTitlesBean.getData().get(mP.get(i)).getDbcname());//列0内容
+                            tableMode.setText1(hjDWTitlesBean.getData().get(mP.get(i)).getTabcname() + "");//列1内容
+                            bd = new BigDecimal(hjDWTitlesBean.getData().get(mP.get(i)).getRows_sum());
+                            count = bd.toPlainString();
+                            tableMode.setText2(count);
+                        }
                     }
 
                     break;
 
             }
-
 
 //
 //                tableMode.setText4(onlineSaleBean.getSaleAllLast() + "");
@@ -826,6 +1026,7 @@ public class CountDetailsActivity extends BaseActivity {
             this.app = app;
             mDatas = new ArrayList<T>();
         }
+
         public AbsCommonAdapter(Context context, int itemLayoutId, MyApplication app, List<String> list) {
             this.mContext = context;
             this.mInflater = LayoutInflater.from(mContext);
@@ -834,6 +1035,7 @@ public class CountDetailsActivity extends BaseActivity {
             mDatas = new ArrayList<T>();
             this.list = list;
         }
+
         /**
          * 在MainActivity中设置text
          */
