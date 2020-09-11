@@ -22,8 +22,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="信息资源">
+            android:text="信息资源"
+            android:textColor="@color/black">
 
         </TextView>
 
@@ -40,8 +40,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="数据量">
+            android:text="数据量"
+            android:textColor="@color/black">
 
         </TextView>
 
@@ -58,20 +58,27 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:text="发布日期">
+            android:text="发布日期"
+            android:textColor="@color/black">
 
         </TextView>
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+        android:id="@+id/pull_refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:overScrollMode="never"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:overScrollMode="never"
 
 
-        android:scrollbars="none"></androidx.recyclerview.widget.RecyclerView>
+            android:scrollbars="none"></androidx.recyclerview.widget.RecyclerView>
+    </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 </LinearLayout>

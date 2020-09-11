@@ -1,6 +1,5 @@
 package com.example.holographicplatformapp.activity.tj;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +21,6 @@ import androidx.appcompat.widget.SearchView;
 import com.example.holographicplatformapp.MyApplication;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
-import com.example.holographicplatformapp.activity.cx.QueryDetailsActivity;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.HjDWTitlesBean;
 import com.example.holographicplatformapp.bean.HjZyTitlesBean;
@@ -42,6 +40,9 @@ import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
+import com.jwenfeng.library.pulltorefresh.ViewStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,7 +76,8 @@ public class CountDetailsActivity extends BaseActivity {
     private ffwKHDMonthBean ffwKHDMonthBean;//表头标题
     private fwZYMonthBean fwZYMonthBean;//表头标题
     private fwDWMonthBean fwDWMonthBean;//表头标题
-
+    private PullToRefreshLayout pullToRefreshLayout;
+    private boolean isRefresh = false;
 
     private TextView tv_table_title_4;//月份
     private TextView tv_table_title_3;//月份
@@ -104,6 +106,9 @@ public class CountDetailsActivity extends BaseActivity {
 
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = false;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -121,6 +126,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = true;
                         tv_table_title_4.setVisibility(View.VISIBLE);
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -134,6 +142,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = false;
 
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -147,6 +158,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_4.setVisibility(View.VISIBLE);
                         isSelectType = true;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -161,6 +175,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
 
                         isSelectType = false;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -177,6 +194,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -192,6 +212,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
 
                         isSelectType = false;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -206,6 +229,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -220,6 +246,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
 
                         isSelectType = false;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);/**/
@@ -238,6 +267,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
                     setDatas(onlineSaleBeanList, mP);
@@ -253,6 +285,9 @@ public class CountDetailsActivity extends BaseActivity {
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
+                    }else {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
                     }
                     mP.clear();
 
@@ -269,14 +304,16 @@ public class CountDetailsActivity extends BaseActivity {
     @Override
     protected void initDatas() {
 
-        initNet();
+        initNet(1);
         mToolbarTb.setTitle(getIntent().getStringExtra("title"));
 
     }
 
-    private void initNet() {
-        customProgressDialog = new CustomProgressDialog(CountDetailsActivity.this, "");
-        customProgressDialog.show();
+    private void initNet(int i) {
+        if (i == 1) {
+            customProgressDialog = new CustomProgressDialog(CountDetailsActivity.this, "");
+            customProgressDialog.show();
+        }
         new Thread() {
             @Override
             public void run() {
@@ -346,6 +383,36 @@ public class CountDetailsActivity extends BaseActivity {
     @Override
     protected void initView() {
         tv_table_title_left = (TextView) findViewById(R.id.tv_table_title_left);
+        pullToRefreshLayout = findViewById(R.id.pull_refresh);
+
+        pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+
+                initNet(2);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isRefresh) {
+                            pullToRefreshLayout.finishRefresh();
+                            isRefresh = false;
+                        }
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void loadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshLayout.finishLoadMore();
+                    }
+                }, 1000);
+
+            }
+        });
 
         leftListView = (ListView) findViewById(R.id.left_container_listview);
         rightListView = (ListView) findViewById(R.id.right_container_listview);
@@ -913,6 +980,7 @@ public class CountDetailsActivity extends BaseActivity {
         mLeftAdapter.addData(mDatas, false);
         mRightAdapter.addData(mDatas, false);
         customProgressDialog.dismiss();
+        isRefresh = true;
         mDatas.clear();
 
     }
@@ -924,7 +992,7 @@ public class CountDetailsActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.action_home:
-                initNet();
+                initNet(1);
                 break;
             case R.id.action_explore:
                 /**

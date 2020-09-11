@@ -23,6 +23,9 @@ import com.example.holographicplatformapp.activity.BaseActivity;
 import com.example.holographicplatformapp.bean.ResourceDetailsBean;
 import com.example.holographicplatformapp.dialog.CustomProgressDialog;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
+import com.jwenfeng.library.pulltorefresh.ViewStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +52,8 @@ public class ResourceDetailsActivity extends BaseActivity {
     private NormalAdapter adapter;
     private int record = 0;
     CustomProgressDialog customProgressDialog;
+    private PullToRefreshLayout pullToRefreshLayout;
+    private boolean isRefresh = false;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -56,7 +61,14 @@ public class ResourceDetailsActivity extends BaseActivity {
                     wholeList = new ArrayList<>();
                     list = new ArrayList<>();
                     initData();
-                    initRecycleView(beans);
+                    if (list.size() == 0) {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
+                    } else {
+
+                        initRecycleView(beans);
+
+                    }
 
                     break;
             }
@@ -73,11 +85,12 @@ public class ResourceDetailsActivity extends BaseActivity {
     };
 
 
-
-    private void initNet() {
+    private void initNet(int i) {
         //执行网络请求
-        customProgressDialog = new CustomProgressDialog(ResourceDetailsActivity.this, "");
-        customProgressDialog.show();
+        if (i == 1) {
+            customProgressDialog = new CustomProgressDialog(ResourceDetailsActivity.this, "");
+            customProgressDialog.show();
+        }
         new Thread() {
             @Override
             public void run() {
@@ -119,6 +132,7 @@ public class ResourceDetailsActivity extends BaseActivity {
 //设置增加或删除条目的动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         customProgressDialog.dismiss();
+        isRefresh = true;
 
     }
 
@@ -129,12 +143,40 @@ public class ResourceDetailsActivity extends BaseActivity {
 
     @Override
     protected void initView() {
+        pullToRefreshLayout = findViewById(R.id.pull_refresh);
+        pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
 
-         if (getIntent().getStringExtra("id") != null) {
+                initNet(2);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isRefresh) {
+                            pullToRefreshLayout.finishRefresh();
+                            isRefresh = false;
+                        }
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void loadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshLayout.finishLoadMore();
+                    }
+                }, 1000);
+
+            }
+        });
+        if (getIntent().getStringExtra("id") != null) {
             mId = getIntent().getStringExtra("id");
             mToolbarTb.setTitle(getIntent().getStringExtra("title"));
         }
-        initNet();
+        initNet(1);
 
 
     }
