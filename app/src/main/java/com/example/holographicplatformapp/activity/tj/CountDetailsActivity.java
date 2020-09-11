@@ -1,19 +1,27 @@
 package com.example.holographicplatformapp.activity.tj;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SearchView;
+
+import com.example.holographicplatformapp.MyApplication;
 import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
+import com.example.holographicplatformapp.activity.zyfl.ResourceDetailsActivity;
 import com.example.holographicplatformapp.adapter.AbsCommonAdapter;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.HjDWTitlesBean;
@@ -37,6 +45,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -68,6 +77,7 @@ public class CountDetailsActivity extends BaseActivity {
     private fwDWMonthBean fwDWMonthBean;//表头标题
 
 
+
     private TextView tv_table_title_4;//月份
     private TextView tv_table_title_3;//月份
 
@@ -84,11 +94,13 @@ public class CountDetailsActivity extends BaseActivity {
             switch (msg.what) {
 
                 case 666:
-
                     onlineSaleBeanList.clear();
+
+
                     for (int i = 0; i < beans.getData().size(); i++) {
                         onlineSaleBeanList.add(new OnlineSaleBean(beans.getData().get(i).getSystemname()));
                     }
+
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = false;
                     }
@@ -162,7 +174,7 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjDWTitlesBean.getData().get(i).getName()));
                     }
 
-                    setDatas(onlineSaleBeanList);
+                    setDatas(onlineSaleBeanList);/**/
 
 
                     break;
@@ -419,7 +431,19 @@ public class CountDetailsActivity extends BaseActivity {
             @Override
             public void convert(AbsViewHolder helper, TableModel item, int pos) {
                 TextView tv_table_content_left = helper.getView(R.id.tv_table_content_item_left);
+                TextView tv_xuhao = helper.getView(R.id.tv_bianhao);
+//                int count = item.getLeftTitle().length();
+//                if (count > 4 && count <= 6) {
+//                    tv_table_content_left.setGravity(Gravity.CENTER);
+//                    tv_xuhao.setGravity(Gravity.CENTER);
+//
+//                }else if (count<=4){
+//                    tv_table_content_left.setGravity(Gravity.CENTER);
+//                    tv_xuhao.setGravity(Gravity.CENTER);
+//                    tv_table_content_left.setTextSize(12);
+//                }
                 tv_table_content_left.setText(item.getLeftTitle());
+                tv_xuhao.setText(item.getXuhao());
             }
         };
         mRightAdapter = new AbsCommonAdapter<TableModel>(mContext, R.layout.table_right_item) {
@@ -494,7 +518,7 @@ public class CountDetailsActivity extends BaseActivity {
 
                 //部分行设置颜色凸显
                 item.setTextColor(tv_table_content_right_item0, item.getText0());
-//                item.setTextColor(tv_table_content_right_item5, item.getText5());
+//                item_tj.setTextColor(tv_table_content_right_item5, item_tj.getText5());
 
 
             }
@@ -507,16 +531,41 @@ public class CountDetailsActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_select_type, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setQueryHint("客户端名称");
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {  // 点击软件盘搜索按钮会弹出 吐司
+
+                return false;
+            }
+
+            // 搜索框文本改变事件
+            @Override
+            public boolean onQueryTextChange(String s) {
+                // 文本内容是空就让 recyclerView 填充全部数据 // 可以是其他容器 如listView
+
+                //匹配文字 变色SS
+                //匹配文字 变色
+
+                return false;
+            }
+        });
         return true;
+
     }
+
+
+
 
     private void setDatas(List<OnlineSaleBean> onlineSaleBeanList) {
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
-            OnlineSaleBean onlineSaleBean = onlineSaleBeanList.get(i);
+
             TableModel tableMode = new TableModel();
-            tableMode.setOrgCode(onlineSaleBean.getOrgCode());
-            tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
+
+            tableMode.setLeftTitle(onlineSaleBeanList.get(i).getCompanyName());
+            tableMode.setXuhao("" + (i + 1));
             BigDecimal bd = null;
             String count;
             switch (getIntent().getStringExtra("title")) {
@@ -580,7 +629,7 @@ public class CountDetailsActivity extends BaseActivity {
                         bd = new BigDecimal(fwZYMonthBean.getData().get(i).getRows_sum());
                         count = bd.toPlainString();
                         tableMode.setText2(count);
-                        tableMode.setText3(""+fwZYMonthBean.getData().get(i).getMonth());
+                        tableMode.setText3("" + fwZYMonthBean.getData().get(i).getMonth());
                     } else {
                         tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
                         tableMode.setText1(fwZyTitlesBean.getData().get(i).getDbcname() + "");//列1内容
@@ -597,7 +646,7 @@ public class CountDetailsActivity extends BaseActivity {
                         bd = new BigDecimal(fwDWMonthBean.getData().get(i).getRows_sum());
                         count = bd.toPlainString();
                         tableMode.setText2(count);
-                        tableMode.setText3(""+fwDWMonthBean.getData().get(i).getMonth());
+                        tableMode.setText3("" + fwDWMonthBean.getData().get(i).getMonth());
 
                     } else {
                         tableMode.setText0(fwZyTitlesBean.getData().get(i).getProc_cname());//列0内容
@@ -759,4 +808,149 @@ public class CountDetailsActivity extends BaseActivity {
         }.start();
 
     }
+
+
+    public abstract class AbsCommonAdapter<T> extends BaseAdapter {
+        protected LayoutInflater mInflater;
+        protected Context mContext;
+        protected List<T> mDatas;
+        protected final int mItemLayoutId;
+        protected MyApplication app;
+        private String text;
+        private List<String> list = new ArrayList<>();
+
+        public AbsCommonAdapter(Context context, int itemLayoutId, MyApplication app) {
+            this.mContext = context;
+            this.mInflater = LayoutInflater.from(mContext);
+            this.mItemLayoutId = itemLayoutId;
+            this.app = app;
+            mDatas = new ArrayList<T>();
+        }
+        public AbsCommonAdapter(Context context, int itemLayoutId, MyApplication app, List<String> list) {
+            this.mContext = context;
+            this.mInflater = LayoutInflater.from(mContext);
+            this.mItemLayoutId = itemLayoutId;
+            this.app = app;
+            mDatas = new ArrayList<T>();
+            this.list = list;
+        }
+        /**
+         * 在MainActivity中设置text
+         */
+        public void setText(String text) {
+            this.text = text;
+        }
+
+        public AbsCommonAdapter(Context context, int itemLayoutId) {
+            this(context, itemLayoutId, null);
+        }
+
+        public void addItemData(T mBean, boolean isRefresh) {
+
+            mDatas.add(mBean);
+            if (isRefresh) {
+                notifyDataSetChanged();
+            }
+        }
+
+        public void addItemData(T mBean, int index, boolean isRefresh) {
+
+            mDatas.add(index, mBean);
+            if (isRefresh) {
+                notifyDataSetChanged();
+            }
+        }
+
+        public void addItemData(Collection<? extends T> mCommonbeans, int index, boolean isRefresh) {
+
+            mDatas.addAll(index, mCommonbeans);
+            if (isRefresh) {
+                notifyDataSetChanged();
+            }
+        }
+
+        public void addItemData(Collection<? extends T> mCommonbeans, boolean isRefresh) {
+
+            mDatas.addAll(mCommonbeans);
+            if (isRefresh) {
+                notifyDataSetChanged();
+            }
+        }
+
+        public void addData(List<T> mCommonbeans, boolean isMore) {
+
+            if (isMore) {
+                if (mCommonbeans != null) {
+
+                    mDatas.addAll(mCommonbeans);
+                }
+            } else {
+
+                mDatas.clear();
+                if (mCommonbeans != null) {
+                    mDatas.addAll(mCommonbeans);
+                }
+            }
+            notifyDataSetChanged();
+        }
+
+        public void remove(int pos) {
+            if (mDatas != null && mDatas.size() > 0) {
+                mDatas.remove(pos);
+                notifyDataSetChanged();
+            }
+        }
+
+        public void clearData(boolean clear) {
+            if (clear) {
+                if (mDatas != null && mDatas.size() > 0) {
+                    mDatas.clear();
+                    notifyDataSetChanged();
+                }
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return mDatas.size();
+        }
+
+        @Override
+        public T getItem(int position) {
+            if (mDatas != null && position >= 0 && position <= (mDatas.size() - 1)) {
+                return mDatas.get(position);
+            }
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final AbsViewHolder viewHolder = getViewHolder(
+                    position, convertView, parent
+            );
+            convert(viewHolder, getItem(position), position);
+            return viewHolder.getConvertView();
+
+        }
+
+        public abstract void convert(AbsViewHolder helper, T item, int pos);
+
+        private AbsViewHolder getViewHolder(int position, View convertView, ViewGroup parent) {
+            return AbsViewHolder.get(
+                    mContext, convertView, parent, mItemLayoutId, position
+            );
+        }
+
+        public List<T> getDatas() {
+            return mDatas;
+        }
+
+    }
+
+
 }

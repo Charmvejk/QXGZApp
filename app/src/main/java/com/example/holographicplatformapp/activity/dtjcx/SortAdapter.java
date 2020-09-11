@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +31,7 @@ public class SortAdapter extends RecyclerView.Adapter<SortAdapter.ViewHolder> {
 
     @Override
     public SortAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.item, parent,false);
+        View view = mInflater.inflate(R.layout.item_tj, parent,false);
         ViewHolder viewHolder = new ViewHolder(view);
         viewHolder.tvTag = (TextView) view.findViewById(R.id.tag);
         viewHolder.tvName = (TextView) view.findViewById(R.id.name);

@@ -127,7 +127,7 @@ public class ResourceTitleActivity extends BaseActivity {
             holder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //item 点击事件
+                    //item_tj 点击事件
                     Intent intent = new Intent(ResourceTitleActivity.this, ResourceDetailsActivity.class);
                     intent.putExtra("id", resourceBeans.getData().get(position).getDest_db());
                     intent.putExtra("title", resourceBeans.getData().get(position).getName());

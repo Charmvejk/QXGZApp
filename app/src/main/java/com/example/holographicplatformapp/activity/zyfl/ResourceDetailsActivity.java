@@ -134,11 +134,6 @@ public class ResourceDetailsActivity extends BaseActivity {
         initNet();
 
 
-        if (getIntent().getStringExtra("id") != null) {
-            mId = getIntent().getStringExtra("id");
-            mToolbarTb.setTitle(getIntent().getStringExtra("title"));
-        }
-        initNet();
     }
 
     @Override

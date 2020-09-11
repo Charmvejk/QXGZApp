@@ -2,8 +2,10 @@ package com.example.holographicplatformapp.activity.cx;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -322,7 +324,12 @@ public class QueryDetailsActivity extends BaseActivity {
             @Override
             public void convert(AbsViewHolder helper, TableModel item, int pos) {
                 TextView tv_table_content_left = helper.getView(R.id.tv_table_content_item_left);
+
+                int count = item.getLeftTitle().length();
+
+                TextView tv_xuhao = helper.getView(R.id.tv_bianhao);
                 tv_table_content_left.setText(item.getLeftTitle());
+                tv_xuhao.setText(item.getXuhao());
             }
         };
         mRightAdapter = new AbsCommonAdapter<TableModel>(mContext, R.layout.table_right_item) {
@@ -361,7 +368,7 @@ public class QueryDetailsActivity extends BaseActivity {
 
                 //部分行设置颜色凸显
                 item.setTextColor(tv_table_content_right_item0, item.getText0());
-//                item.setTextColor(tv_table_content_right_item5, item.getText5());
+//                item_tj.setTextColor(tv_table_content_right_item5, item_tj.getText5());
 
 
             }
@@ -378,6 +385,7 @@ public class QueryDetailsActivity extends BaseActivity {
             TableModel tableMode = new TableModel();
             tableMode.setOrgCode(onlineSaleBean.getOrgCode());
             tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
+            tableMode.setXuhao("" + (i + 1));
             BigDecimal bd = null;
             String date;
             switch (getIntent().getStringExtra("title")) {
@@ -505,7 +513,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
-                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>"+id+"</value></para>" +
+                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para>" +
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>  " + endTime + "</value></para>" +
                 "</paras>");
@@ -518,7 +526,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
-                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>"+id+"</value></para>" +
+                "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para>" +
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value> " + endTime + "</value></para>" +
                 "</paras>");

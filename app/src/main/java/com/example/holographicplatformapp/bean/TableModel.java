@@ -7,6 +7,16 @@ public class TableModel {
 
     private String orgCode;
     private String leftTitle;
+
+    public String getXuhao() {
+        return xuhao;
+    }
+
+    public void setXuhao(String xuhao) {
+        this.xuhao = xuhao;
+    }
+
+    private String xuhao;
     private String text0;
     private String text1;
     private String text2;
