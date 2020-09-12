@@ -105,8 +105,9 @@ public class CountDetailsActivity extends BaseActivity {
                     }
 
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = false;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -125,8 +126,9 @@ public class CountDetailsActivity extends BaseActivity {
 
                     if (onlineSaleBeanList.size() != 0) {
                         isSelectType = true;
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         tv_table_title_4.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -140,9 +142,10 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwKHTitlesBean.getData().get(i).getSystemname()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = false;
 
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -156,9 +159,10 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(ffwKHDMonthBean.getData().get(i).getName()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         tv_table_title_4.setVisibility(View.VISIBLE);
                         isSelectType = true;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -173,9 +177,9 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjZyTitlesBean.getData().get(i).getName()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
-
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = false;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -193,8 +197,9 @@ public class CountDetailsActivity extends BaseActivity {
 
                     if (onlineSaleBeanList.size() != 0) {
                         tv_table_title_3.setVisibility(View.VISIBLE);
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = true;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -210,9 +215,9 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwZyTitlesBean.getData().get(i).getName()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
-
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = false;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -227,9 +232,10 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwZYMonthBean.getData().get(i).getName()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -244,9 +250,9 @@ public class CountDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjDWTitlesBean.getData().get(i).getName()));
                     }
                     if (onlineSaleBeanList.size() != 0) {
-
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         isSelectType = false;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -265,9 +271,10 @@ public class CountDetailsActivity extends BaseActivity {
                     }
 
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }
@@ -283,9 +290,10 @@ public class CountDetailsActivity extends BaseActivity {
                     }
 
                     if (onlineSaleBeanList.size() != 0) {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         tv_table_title_3.setVisibility(View.VISIBLE);
                         isSelectType = true;
-                    }else {
+                    } else {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     }

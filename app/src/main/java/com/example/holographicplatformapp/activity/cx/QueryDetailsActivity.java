@@ -1,16 +1,12 @@
 package com.example.holographicplatformapp.activity.cx;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,7 +17,6 @@ import com.example.holographicplatformapp.R;
 import com.example.holographicplatformapp.activity.BaseActivity;
 import com.example.holographicplatformapp.activity.dtjcx.SearchActivity;
 import com.example.holographicplatformapp.activity.tj.CountDetailsActivity;
-import com.example.holographicplatformapp.activity.zyfl.ResourceTitleActivity;
 import com.example.holographicplatformapp.adapter.AbsCommonAdapter;
 import com.example.holographicplatformapp.adapter.AbsViewHolder;
 import com.example.holographicplatformapp.bean.OnlineSaleBean;
@@ -32,15 +27,15 @@ import com.example.holographicplatformapp.bean.fwKHDBean;
 import com.example.holographicplatformapp.bean.fwZYCXBean;
 import com.example.holographicplatformapp.bean.hjZYCXBean;
 import com.example.holographicplatformapp.dialog.CustomProgressDialog;
-import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
-import com.example.holographicplatformapp.utils.TimeUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
+import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
+import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
+import com.jwenfeng.library.pulltorefresh.ViewStatus;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 import static com.example.holographicplatformapp.HttpUrls.postXml;
@@ -65,9 +60,10 @@ public class QueryDetailsActivity extends BaseActivity {
     private SyncHorizontalScrollView titleHorScv;
     private SyncHorizontalScrollView contentHorScv;
     CustomProgressDialog customProgressDialog;
-
+    private PullToRefreshLayout pullToRefreshLayout;//刷新
     /*主要筛选过滤*/
     private int record = 0;
+    private boolean isRefresh = false;
     private List<Integer> mP = new ArrayList<>();
     List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
     private Handler mHandler = new Handler() {
@@ -80,6 +76,12 @@ public class QueryDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(beans.getData().get(i).getSystemname()));
                     }
                     mP.clear();
+                    if (onlineSaleBeanList.size() == 0) {
+                        customProgressDialog.dismiss();
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                    } else {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
+                    }
                     setDatas(onlineSaleBeanList, mP);
 
                     break;
@@ -89,8 +91,13 @@ public class QueryDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(hjZYCXBean.getData().get(i).getName()));
                     }
                     mP.clear();
+                    if (onlineSaleBeanList.size() == 0) {
+                        customProgressDialog.dismiss();
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                    } else {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
+                    }
                     setDatas(onlineSaleBeanList, mP);
-
                     break;
                 case 000:
                     onlineSaleBeanList.clear();
@@ -98,8 +105,13 @@ public class QueryDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwDwBean.getData().get(i).getName()));
                     }
                     mP.clear();
+                    if (onlineSaleBeanList.size() == 0) {
+                        customProgressDialog.dismiss();
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                    } else {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
+                    }
                     setDatas(onlineSaleBeanList, mP);
-
                     break;
                 case 1000:
                     onlineSaleBeanList.clear();
@@ -107,8 +119,13 @@ public class QueryDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwZYCXBean.getData().get(i).getDbcname()));
                     }
                     mP.clear();
+                    if (onlineSaleBeanList.size() == 0) {
+                        customProgressDialog.dismiss();
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                    } else {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
+                    }
                     setDatas(onlineSaleBeanList, mP);
-
                     break;
                 case 6000:
                     onlineSaleBeanList.clear();
@@ -116,8 +133,13 @@ public class QueryDetailsActivity extends BaseActivity {
                         onlineSaleBeanList.add(new OnlineSaleBean(fwDwCXBean.getData().get(i).getName()));
                     }
                     mP.clear();
+                    if (onlineSaleBeanList.size() == 0) {
+                        pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
+                        customProgressDialog.dismiss();
+                    } else {
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
+                    }
                     setDatas(onlineSaleBeanList, mP);
-
                     break;
             }
         }
@@ -128,13 +150,17 @@ public class QueryDetailsActivity extends BaseActivity {
 
     @Override
     protected void initDatas() {
-        initNet();
+        initNet(1);
         mToolbarTb.setTitle(getIntent().getStringExtra("title"));
     }
 
-    private void initNet() {
-        customProgressDialog = new CustomProgressDialog(QueryDetailsActivity.this, "");
-        customProgressDialog.show();
+    private void initNet(int i) {
+
+
+        if (i == 1) {
+            customProgressDialog = new CustomProgressDialog(QueryDetailsActivity.this, "");
+            customProgressDialog.show();
+        }
         ArrayList<String> mListUrlPath = new ArrayList<>();
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
@@ -289,12 +315,40 @@ public class QueryDetailsActivity extends BaseActivity {
     @Override
     protected void initView() {
         tv_table_title_left = (TextView) findViewById(R.id.tv_table_title_left);
-
+        pullToRefreshLayout = findViewById(R.id.pull_refresh);
         leftListView = (ListView) findViewById(R.id.left_container_listview);
         rightListView = (ListView) findViewById(R.id.right_container_listview);
         right_title_container = (LinearLayout) findViewById(R.id.right_title_container);
 
         View view = getLayoutInflater().inflate(R.layout.table_right_title, right_title_container);
+        pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
+            @Override
+            public void refresh() {
+
+                initNet(2);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isRefresh) {
+                            pullToRefreshLayout.finishRefresh();
+                            isRefresh = false;
+                        }
+                    }
+                }, 1000);
+            }
+
+            @Override
+            public void loadMore() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pullToRefreshLayout.finishLoadMore();
+                    }
+                }, 1000);
+
+            }
+        });
 
 
         TextView tv_table_title_0 = view.findViewById(R.id.tv_table_title_0);
@@ -612,6 +666,7 @@ public class QueryDetailsActivity extends BaseActivity {
         mLeftAdapter.addData(mDatas, false);
         mRightAdapter.addData(mDatas, false);
         customProgressDialog.dismiss();
+        isRefresh = true;
         mDatas.clear();
 
     }

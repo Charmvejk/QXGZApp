@@ -65,7 +65,7 @@ public class ResourceDetailsActivity extends BaseActivity {
                         pullToRefreshLayout.showView(ViewStatus.EMPTY_STATUS);
                         customProgressDialog.dismiss();
                     } else {
-
+                        pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                         initRecycleView(beans);
 
                     }

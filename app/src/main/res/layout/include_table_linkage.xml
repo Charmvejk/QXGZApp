@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- 此部分是标题部分 -->
     <LinearLayout
@@ -46,45 +46,50 @@
         </com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView>
     </LinearLayout>
 
-
-    <ScrollView
-
-        android:id="@+id/pull_refresh_scroll"
+    <com.jwenfeng.library.pulltorefresh.PullToRefreshLayout
+        android:id="@+id/pull_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
+        <ScrollView
+
+            android:id="@+id/pull_refresh_scroll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="match_parent">
 
-            <!-- 左侧内容的父容器 -->
-            <com.example.holographicplatformapp.scrrow.MyListView
-                android:id="@+id/left_container_listview"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:orientation="horizontal">
 
-
-
-                android:scrollbars="none"></com.example.holographicplatformapp.scrrow.MyListView>>
-
-            <!-- 右侧内容的父容器 实现水平滚动 -->
-            <com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView
-                android:id="@+id/content_horsv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:fillViewport="true"
-                android:scrollbars="none">
-
+                <!-- 左侧内容的父容器 -->
                 <com.example.holographicplatformapp.scrrow.MyListView
-                    android:id="@+id/right_container_listview"
-                    android:layout_width="match_parent"
+                    android:id="@+id/left_container_listview"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="#ffffff"
+                    android:layout_weight="1"
+
+
                     android:scrollbars="none"></com.example.holographicplatformapp.scrrow.MyListView>
-            </com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView>
-        </LinearLayout>
-    </ScrollView>
+                >
+
+                <!-- 右侧内容的父容器 实现水平滚动 -->
+                <com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView
+                    android:id="@+id/content_horsv"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
+                    <com.example.holographicplatformapp.scrrow.MyListView
+                        android:id="@+id/right_container_listview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:scrollbars="none"></com.example.holographicplatformapp.scrrow.MyListView>
+                </com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView>
+            </LinearLayout>
+        </ScrollView>
+    </com.jwenfeng.library.pulltorefresh.PullToRefreshLayout>
 </LinearLayout>
