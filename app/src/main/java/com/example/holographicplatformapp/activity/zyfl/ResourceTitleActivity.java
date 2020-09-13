@@ -80,11 +80,16 @@ public class ResourceTitleActivity extends BaseActivity {
                         "<paras>" +
                         "</paras>";
                 String result = postXml(db_regist_allname, path);
-                Gson gson = new Gson();
-                beans = gson.fromJson(result, ResourceBean.class);
-                Message message = new Message();
-                message.what = 666;
-                mHandler.sendMessage(message);
+                try {
+                    Gson gson = new Gson();
+                    beans = gson.fromJson(result, ResourceBean.class);
+                    Message message = new Message();
+                    message.what = 666;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+
+                }
+
             }
         }.start();
     }

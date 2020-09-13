@@ -15,6 +15,22 @@ public class hjKHDMonthBean {
     }
 
     public static class DataBean {
+        public String getClientname() {
+            return clientname;
+        }
+
+        public void setClientname(String clientname) {
+            this.clientname = clientname;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * uname : binzhou-hetian-jiuyijilu
          * systemname : 滨州和天就医记录
@@ -24,6 +40,8 @@ public class hjKHDMonthBean {
          * tabcname : 滨州就医记录信息
          * rows_sum : 2572943
          */
+        private String clientname;
+        private String date;
 
         private String uname;
         private String systemname;

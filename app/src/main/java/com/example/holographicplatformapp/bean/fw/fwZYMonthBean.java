@@ -15,6 +15,14 @@ public class fwZYMonthBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * dbcname : 采集对象
          * proc_cname : 系统根据数据行版本同步人脸卡口信息
@@ -22,7 +30,7 @@ public class fwZYMonthBean {
          * month : 201912
          * rows_sum : 296239
          */
-
+        private String date;
         private String dbcname;
         private String proc_cname;
         private String Name;

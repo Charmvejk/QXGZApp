@@ -81,6 +81,7 @@ public class CountDetailsActivity extends BaseActivity {
 
     private TextView tv_table_title_4;//月份
     private TextView tv_table_title_3;//月份
+    private int finalType = 1;
 
     private boolean isSelectType = false;
     CustomProgressDialog customProgressDialog;
@@ -112,7 +113,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
                 case 777:
@@ -133,7 +134,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
                 case 1000:
@@ -150,7 +151,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
                 case 111000:
@@ -167,7 +168,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
 
                     break;
@@ -184,7 +185,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
 
                     break;
@@ -204,7 +205,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
 
                     break;
@@ -222,7 +223,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
 
                     break;
@@ -240,7 +241,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
 
                     break;
@@ -257,8 +258,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);/**/
-
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
 
@@ -279,7 +279,7 @@ public class CountDetailsActivity extends BaseActivity {
                         customProgressDialog.dismiss();
                     }
                     mP.clear();
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
                 case 9988:
@@ -299,7 +299,7 @@ public class CountDetailsActivity extends BaseActivity {
                     }
                     mP.clear();
 
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, msg.arg1);
 
                     break;
             }
@@ -688,12 +688,12 @@ public class CountDetailsActivity extends BaseActivity {
             }
         }
 
-        setDatas(filterDateList, mP);
+        setDatas(filterDateList, mP, finalType);
         mLeftAdapter.notifyDataSetChanged();
     }
 
 
-    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP) {
+    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP, int type) {
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
             String finaDate;
@@ -713,11 +713,18 @@ public class CountDetailsActivity extends BaseActivity {
                             tableMode.setText0(hjKHDMonthBean.getData().get(i).getName());//列0内容
                             tableMode.setText1(hjKHDMonthBean.getData().get(i).getDbcname() + "");//列1内容
                             tableMode.setText2(hjKHDMonthBean.getData().get(i).getTabcname() + "");//列2内容
+
+
                             bd = new BigDecimal(hjKHDMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            if (type == 1) {
+                                tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjKHDMonthBean.getData().get(i).getDate();
+                                tableMode.setText4(date.substring(0, date.indexOf("T")));
 
+                            }
                         } else {
 
                             finaDate = "" + hjKHDMonthBean.getData().get(mP.get(i)).getMonth();
@@ -728,7 +735,13 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            if (type == 1) {
+                                tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjKHDMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText4(date.substring(0, date.indexOf("T")));
+
+                            }
 
                         }
 
@@ -763,7 +776,13 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(ffwKHDMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            if (type == 1) {
+                                tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = ffwKHDMonthBean.getData().get(i).getDate();
+                                tableMode.setText4(date.substring(0, date.indexOf("T")));
+
+                            }
 
                         } else {
                             finaDate = "" + ffwKHDMonthBean.getData().get(mP.get(i)).getMonth();
@@ -773,7 +792,13 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(ffwKHDMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText3(count);
-                            tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            if (type == 1) {
+                                tableMode.setText4(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = ffwKHDMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText4(date.substring(0, date.indexOf("T")));
+
+                            }
                         }
 
 
@@ -811,7 +836,15 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjZYMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjZYMonthBean.getData().get(i).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
                         } else {
 
                             finaDate = "" + hjZYMonthBean.getData().get(mP.get(i)).getMonth();
@@ -820,7 +853,16 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjZYMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjZYMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
+
                         }
 
 
@@ -856,7 +898,14 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(fwZYMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = fwZYMonthBean.getData().get(i).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
                         } else {
                             finaDate = "" + fwZYMonthBean.getData().get(mP.get(i)).getMonth();
 
@@ -865,7 +914,17 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(fwZYMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = fwZYMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
+
                         }
 
 
@@ -901,7 +960,16 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(fwDWMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = fwDWMonthBean.getData().get(i).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
+
                         } else {
                             finaDate = "" + fwDWMonthBean.getData().get(mP.get(i)).getMonth();
                             tableMode.setText0(fwDWMonthBean.getData().get(mP.get(i)).getProc_cname());//列0内容
@@ -909,7 +977,15 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(fwDWMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = fwDWMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
                         }
 
 
@@ -943,7 +1019,16 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjDWMonthBean.getData().get(i).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjDWMonthBean.getData().get(i).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
                         } else {
                             finaDate = "" + hjDWMonthBean.getData().get(mP.get(i)).getMonth();
 
@@ -952,7 +1037,16 @@ public class CountDetailsActivity extends BaseActivity {
                             bd = new BigDecimal(hjDWMonthBean.getData().get(mP.get(i)).getRows_sum());
                             count = bd.toPlainString();
                             tableMode.setText2(count);
-                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+
+                            if (type == 1) {
+                                tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                            } else {
+                                String date = hjDWMonthBean.getData().get(mP.get(i)).getDate();
+                                tableMode.setText3(date.substring(0, date.indexOf("T")));
+
+                            }
+
                         }
 
 
@@ -1006,16 +1100,24 @@ public class CountDetailsActivity extends BaseActivity {
                 /**
                  *展示日期选择框
                  */
-                showDatePicker();
+                finalType = 1;
+                showDatePicker(1);
+                break;
+            case R.id.action_me:
+                /**
+                 *展示日期选择框
+                 */
+                finalType = 2;
+                showDatePicker(2);
                 break;
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-    private void showDatePicker() {
+    private void showDatePicker(int type) {
         Calendar c = Calendar.getInstance();
-        new DoubleDatePickerDialog(CountDetailsActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
+        new DoubleDatePickerDialog(type, CountDetailsActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear,
@@ -1036,26 +1138,44 @@ public class CountDetailsActivity extends BaseActivity {
                 startTime = startYear + "" +
                         startMonth;
                 endTime = endYear + "" + endMonth;
-                initNetMonth(startTime, endTime);
+                initNetMonth(startTime, endTime, type);
 
 
             }
         }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), false).show();
     }
 
-    private void initNetMonth(String startTime, String endTime) {
+    private void initNetMonth(String startTime, String endTime, int type) {
         customProgressDialog = new CustomProgressDialog(CountDetailsActivity.this, "");
         customProgressDialog.show();
         new Thread() {
             @Override
             public void run() {
                 Message message = new Message();
-                String path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
-                        "<paras>" +
-                        "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>" + startTime + "</value></para>" +
-                        " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>" + endTime + "</value></para>" +
-                        "</paras>";
-                String result = postXml(getIntent().getStringExtra("dayUrl"), path);
+                String path = null;
+                switch (type) {
+                    case 1:
+                        path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
+                                "<paras>" +
+                                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>" + startTime + "</value></para>" +
+                                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>" + endTime + "</value></para>" +
+                                "</paras>";
+                        break;
+                    case 2:
+                        path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
+                                "<paras>" +
+                                "<para><name>ks</name > <sqldbtype>date</sqldbtype><value>2019-06-01</value></para> " +
+                                " <para><name>js</name > <sqldbtype>date</sqldbtype><value>2020-12-20</value></para>" +
+                                "</paras>";
+                        break;
+                }
+                String result;
+                if (type == 1) {
+                    result = postXml(getIntent().getStringExtra("monthUrl"), path);
+                } else {
+                    result = postXml(getIntent().getStringExtra("dayUrl"), path);
+                }
+
                 Gson gson = new Gson();
                 try {
                     switch (getIntent().getStringExtra("title")) {
@@ -1063,39 +1183,40 @@ public class CountDetailsActivity extends BaseActivity {
                             hjKHDMonthBean = gson.fromJson(result, hjKHDMonthBean.class);
 
                             message.what = 777;
+                            message.arg1 = type;
                             mHandler.sendMessage(message);
                             break;
                         case "服务按客户端统计":
                             ffwKHDMonthBean = gson.fromJson(result, ffwKHDMonthBean.class);
-
+                            message.arg1 = type;
                             message.what = 111000;
                             mHandler.sendMessage(message);
 
                             break;
                         case "汇聚按资源统计":
                             hjZYMonthBean = gson.fromJson(result, hjZYMonthBean.class);
-
+                            message.arg1 = type;
                             message.what = 1999;
                             mHandler.sendMessage(message);
 
                             break;
                         case "服务按资源统计":
                             fwZYMonthBean = gson.fromJson(result, fwZYMonthBean.class);
-
+                            message.arg1 = type;
                             message.what = 9090;
                             mHandler.sendMessage(message);
 
                             break;
                         case "服务按单位统计":
                             fwDWMonthBean = gson.fromJson(result, fwDWMonthBean.class);
-
+                            message.arg1 = type;
                             message.what = 9988;
                             mHandler.sendMessage(message);
 
                             break;
                         case "汇聚按单位统计":
                             hjDWMonthBean = gson.fromJson(result, hjDWMonthBean.class);
-
+                            message.arg1 = type;
                             message.what = 000123;
                             mHandler.sendMessage(message);
 

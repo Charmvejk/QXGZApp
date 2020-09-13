@@ -26,16 +26,22 @@ import static com.example.holographicplatformapp.Constants.cx_hj_dwny;
 import static com.example.holographicplatformapp.Constants.cx_hj_resourceny;
 import static com.example.holographicplatformapp.Constants.tj_fw_clientall;
 import static com.example.holographicplatformapp.Constants.tj_fw_clientny;
+import static com.example.holographicplatformapp.Constants.tj_fw_clientrq;
 import static com.example.holographicplatformapp.Constants.tj_fw_dwall;
 import static com.example.holographicplatformapp.Constants.tj_fw_dwny;
+import static com.example.holographicplatformapp.Constants.tj_fw_dwrq;
 import static com.example.holographicplatformapp.Constants.tj_fw_resourceall;
 import static com.example.holographicplatformapp.Constants.tj_fw_resourceny;
+import static com.example.holographicplatformapp.Constants.tj_fw_resourcerq;
 import static com.example.holographicplatformapp.Constants.tj_hj_clientall;
 import static com.example.holographicplatformapp.Constants.tj_hj_clientny;
+import static com.example.holographicplatformapp.Constants.tj_hj_clientrq;
 import static com.example.holographicplatformapp.Constants.tj_hj_dwall;
 import static com.example.holographicplatformapp.Constants.tj_hj_dwny;
+import static com.example.holographicplatformapp.Constants.tj_hj_dwrq;
 import static com.example.holographicplatformapp.Constants.tj_hj_resourceall;
 import static com.example.holographicplatformapp.Constants.tj_hj_resourceny;
+import static com.example.holographicplatformapp.Constants.tj_hj_resourcerq;
 
 /*
  *
@@ -132,6 +138,7 @@ public class StatisticsActivity extends BaseActivity {
         public void onBindViewHolder(VH holder, int position) {
             holder.title.setText(mList.get(position));
             List<String> mListUrl = new ArrayList<>();
+            List<String> mListMonthUrl = new ArrayList<>();
             List<String> mListDayUrl = new ArrayList<>();
             if ("hj".equals(getIntent().getStringExtra("title"))) {
                 mListUrl.add(tj_hj_clientall);
@@ -141,12 +148,23 @@ public class StatisticsActivity extends BaseActivity {
                 mListUrl.add(cx_hj_resourceny);
                 mListUrl.add(cx_hj_dwny);
 
-                mListDayUrl.add(tj_hj_clientny);
-                mListDayUrl.add(tj_hj_resourceny);
-                mListDayUrl.add(tj_hj_dwny);
-                mListDayUrl.add(cx_hj_clientny);
-                mListDayUrl.add(cx_hj_resourceny);
-                mListDayUrl.add(cx_hj_dwny);
+                mListMonthUrl.add(tj_hj_clientny);
+                mListMonthUrl.add(tj_hj_resourceny);
+                mListMonthUrl.add(tj_hj_dwny);
+                mListMonthUrl.add(cx_hj_clientny);
+                mListMonthUrl.add(cx_hj_resourceny);
+                mListMonthUrl.add(cx_hj_dwny);
+
+
+                mListDayUrl.add(tj_hj_clientrq);
+                mListDayUrl.add(tj_hj_resourcerq);
+                mListDayUrl.add(tj_hj_dwrq);
+                mListDayUrl.add("");
+                mListDayUrl.add("");
+                mListDayUrl.add("");
+
+
+
 
             } else {
                 mListUrl.add(tj_fw_clientall);
@@ -156,18 +174,28 @@ public class StatisticsActivity extends BaseActivity {
                 mListUrl.add(cx_fw_resourceny);
                 mListUrl.add(cx_fw_dwny);
 
-                mListDayUrl.add(tj_fw_clientny);
-                mListDayUrl.add(tj_fw_resourceny);
-                mListDayUrl.add(tj_fw_dwny);
+                mListMonthUrl.add(tj_fw_clientny);
+                mListMonthUrl.add(tj_fw_resourceny);
+                mListMonthUrl.add(tj_fw_dwny);
+                mListMonthUrl.add("");
+                mListMonthUrl.add(cx_fw_resourceny);
+                mListMonthUrl.add(cx_fw_dwny);
+
+
+                mListDayUrl.add(tj_fw_clientrq);
+                mListDayUrl.add(tj_fw_resourcerq);
+                mListDayUrl.add(tj_fw_dwrq);
                 mListDayUrl.add("");
-                mListDayUrl.add(cx_fw_resourceny);
-                mListDayUrl.add(cx_fw_dwny);
+                mListDayUrl.add("");
+                mListDayUrl.add("");
+
+
             }
 
             holder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    nextPages(mList.get(position), mListUrl.get(position),mListDayUrl.get(position));
+                    nextPages(mList.get(position), mListUrl.get(position),mListMonthUrl.get(position),mListDayUrl.get(position));
                 }
 
 
@@ -189,7 +217,7 @@ public class StatisticsActivity extends BaseActivity {
         }
     }
 
-    private void nextPages(String title, String url,String mDayUrl) {
+    private void nextPages(String title, String url,String mMonthUrl,String mDayUrl) {
         Intent intent;
         if (title.contains("查询")) {
             intent = new Intent(StatisticsActivity.this, QueryDetailsActivity.class);
@@ -199,6 +227,7 @@ public class StatisticsActivity extends BaseActivity {
         }
         intent.putExtra("title", title);
         intent.putExtra("url", url);
+        intent.putExtra("monthUrl", mMonthUrl);
         intent.putExtra("dayUrl", mDayUrl);
         startActivity(intent);
 

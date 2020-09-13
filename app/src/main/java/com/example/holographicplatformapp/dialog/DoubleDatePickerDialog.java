@@ -33,6 +33,7 @@ public class DoubleDatePickerDialog extends AlertDialog implements DialogInterfa
     private final DatePicker mDatePicker_start;
     private final DatePicker mDatePicker_end;
     private final OnDateSetListener mCallBack;
+    private int type = 1;
 
     /**
      * The callback used to indicate the user is done filling in the date.
@@ -53,13 +54,13 @@ public class DoubleDatePickerDialog extends AlertDialog implements DialogInterfa
      * @param monthOfYear The initial month of the dialog.
      * @param dayOfMonth  The initial day of the dialog.
      */
-    public DoubleDatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
-        this(context, 0, callBack, year, monthOfYear, dayOfMonth);
+    public DoubleDatePickerDialog(int type, Context context, OnDateSetListener callBack, int year, int monthOfYear, int dayOfMonth) {
+        this(type, context, 0, callBack, year, monthOfYear, dayOfMonth);
     }
 
-    public DoubleDatePickerDialog(Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear,
+    public DoubleDatePickerDialog(int type, Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear,
                                   int dayOfMonth) {
-        this(context, 0, callBack, year, monthOfYear, dayOfMonth, true);
+        this(type, context, 0, callBack, year, monthOfYear, dayOfMonth, true);
     }
 
     /**
@@ -70,10 +71,10 @@ public class DoubleDatePickerDialog extends AlertDialog implements DialogInterfa
      * @param monthOfYear The initial month of the dialog.
      * @param dayOfMonth  The initial day of the dialog.
      */
-    public DoubleDatePickerDialog(Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear,
+    public DoubleDatePickerDialog(int tye, Context context, int theme, OnDateSetListener callBack, int year, int monthOfYear,
                                   int dayOfMonth, boolean isDayVisible) {
         super(context, theme);
-
+        type = tye;
         mCallBack = callBack;
 
         Context themeContext = getContext();
@@ -84,7 +85,12 @@ public class DoubleDatePickerDialog extends AlertDialog implements DialogInterfa
         setIcon(0);
 
         LayoutInflater inflater = (LayoutInflater) themeContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.date_picker_dialog, null);
+        View view;
+        if (type == 1) {
+            view = inflater.inflate(R.layout.date_picker_dialog, null);
+        } else {
+            view = inflater.inflate(R.layout.date_picker_vertical_dialog, null);
+        }
         setView(view);
         mDatePicker_start = (DatePicker) view.findViewById(R.id.datePickerStart);
         mDatePicker_end = (DatePicker) view.findViewById(R.id.datePickerEnd);

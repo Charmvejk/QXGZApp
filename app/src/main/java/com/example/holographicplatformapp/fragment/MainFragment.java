@@ -167,11 +167,16 @@ public class MainFragment extends BaseFragment {
                         "<paras>" +
                         "</paras>";
                 String result = postXml(db_15day_tj, path);
-                Gson gson = new Gson();
-                fourteenDaysBean = gson.fromJson(result, FourteenDaysBean.class);
-                Message message = new Message();
-                message.what = 999;
-                mHandler.sendMessage(message);
+                try {
+                    Gson gson = new Gson();
+                    fourteenDaysBean = gson.fromJson(result, FourteenDaysBean.class);
+                    Message message = new Message();
+                    message.what = 999;
+                    mHandler.sendMessage(message);
+                } catch (Exception e) {
+
+                }
+
             }
         }.start();
     }

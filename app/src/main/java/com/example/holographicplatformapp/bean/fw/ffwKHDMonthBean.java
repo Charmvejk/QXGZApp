@@ -27,6 +27,26 @@ public class ffwKHDMonthBean {
          */
 
         private String uname;
+
+        public String getClientname() {
+            return clientname;
+        }
+
+        public void setClientname(String clientname) {
+            this.clientname = clientname;
+        }
+
+        private String clientname;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        private String date;
         private String systemname;
         private int month;
         private String Name;

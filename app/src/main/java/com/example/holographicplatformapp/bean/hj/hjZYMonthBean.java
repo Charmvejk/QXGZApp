@@ -15,6 +15,14 @@ public class hjZYMonthBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * dbcname : 人脸识别
          * tabcname : 人体对象
@@ -22,7 +30,7 @@ public class hjZYMonthBean {
          * month : 201912
          * rows_sum : 15724004
          */
-
+        private String date;
         private String dbcname;
         private String tabcname;
         private String Name;

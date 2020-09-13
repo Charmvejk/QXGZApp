@@ -51,4 +51,15 @@ public class Constants {
      */
     public static String ydd_cx_dwmc = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_dwmc/data";
 
+
+    /**
+     * 汇聚、服务统计按日
+     */
+    public static String tj_hj_clientrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_hj_clientrq/data";
+    public static String tj_hj_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_hj_resourcerq/data";
+    public static String tj_hj_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_hj_dwrq/data";
+    public static String tj_fw_clientrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_clientrq/data";
+    public static String tj_fw_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_resourcerq/data";
+    public static String tj_fw_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_dwrq/data";
+
 }

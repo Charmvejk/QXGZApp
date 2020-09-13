@@ -15,6 +15,14 @@ public class hjDWMonthBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * Name : 山东省公安厅
          * month : 201912
@@ -22,7 +30,7 @@ public class hjDWMonthBean {
          * tabcname : 电子围栏
          * rows_sum : 1035597136
          */
-
+        private String date;
         private String Name;
         private int month;
         private String dbcname;

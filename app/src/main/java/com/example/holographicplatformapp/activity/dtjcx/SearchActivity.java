@@ -135,7 +135,7 @@ public class SearchActivity extends BaseActivity {
 
     private void showDatePicker(String name) {
         Calendar c = Calendar.getInstance();
-        new DoubleDatePickerDialog(SearchActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
+        new DoubleDatePickerDialog(1,SearchActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear,
@@ -175,47 +175,45 @@ public class SearchActivity extends BaseActivity {
         new Thread() {
             @Override
             public void run() {
-                Gson gson = new Gson();
-                Message message = new Message();
-                String url = null;
-                String result = null;
-                String path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
-                        "<paras>" +
-                        "</paras>";
-                switch (getIntent().getStringExtra("title")) {
-                    case "汇聚按客户端查询":
-                        url = ydd_cx_zydl;
-                        result = postXml(url, path);
-                        beans = gson.fromJson(result, KHDMCDatasBean.class);
-                        message.what = 666;
-                        mHandler.sendMessage(message);
-                        break;
-                    case "汇聚按单位查询":
-                        url = ydd_cx_hjdw;
-                        result = postXml(url, path);
-                        dwmcDatasBean = gson.fromJson(result, DWMCDatasBean.class);
-                        message.what = 999;
-                        mHandler.sendMessage(message);
-                        break;
-                    case "服务按客户端查询":
-                        url = ydd_cx_fwkhd;
-                        result = postXml(url, path);
-                        fwkhdmcDatasBean = gson.fromJson(result, FWKHDMCDatasBean.class);
-                        message.what = 1999;
-                        mHandler.sendMessage(message);
-
-                        break;
-                    case "服务按单位查询":
-                        url = ydd_cx_dwmc;
-                        result = postXml(url, path);
-                        fwdwmcDatasBean = gson.fromJson(result, FWDWMCDatasBean.class);
-                        message.what = 2999;
-                        mHandler.sendMessage(message);
-                        break;
-                }
-
-
                 try {
+                    Gson gson = new Gson();
+                    Message message = new Message();
+                    String url = null;
+                    String result = null;
+                    String path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
+                            "<paras>" +
+                            "</paras>";
+                    switch (getIntent().getStringExtra("title")) {
+                        case "汇聚按客户端查询":
+                            url = ydd_cx_zydl;
+                            result = postXml(url, path);
+                            beans = gson.fromJson(result, KHDMCDatasBean.class);
+                            message.what = 666;
+                            mHandler.sendMessage(message);
+                            break;
+                        case "汇聚按单位查询":
+                            url = ydd_cx_hjdw;
+                            result = postXml(url, path);
+                            dwmcDatasBean = gson.fromJson(result, DWMCDatasBean.class);
+                            message.what = 999;
+                            mHandler.sendMessage(message);
+                            break;
+                        case "服务按客户端查询":
+                            url = ydd_cx_fwkhd;
+                            result = postXml(url, path);
+                            fwkhdmcDatasBean = gson.fromJson(result, FWKHDMCDatasBean.class);
+                            message.what = 1999;
+                            mHandler.sendMessage(message);
+
+                            break;
+                        case "服务按单位查询":
+                            url = ydd_cx_dwmc;
+                            result = postXml(url, path);
+                            fwdwmcDatasBean = gson.fromJson(result, FWDWMCDatasBean.class);
+                            message.what = 2999;
+                            mHandler.sendMessage(message);
+                            break;
+                    }
 
                 } catch (Exception e) {
 
