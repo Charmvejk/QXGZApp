@@ -84,7 +84,7 @@ public class CountDetailsActivity extends BaseActivity {
     private int finalType = 1;
 
     private boolean isSelectType = false;
-    CustomProgressDialog customProgressDialog;
+    private CustomProgressDialog customProgressDialog;
 
     private hjKHDMonthBean hjKHDMonthBean;//按月
     private hjZYMonthBean hjZYMonthBean;//表头标题
@@ -92,7 +92,7 @@ public class CountDetailsActivity extends BaseActivity {
     /*主要筛选过滤*/
     private int record = 0;
     private List<Integer> mP = new ArrayList<>();
-    List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
+    private List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -1135,9 +1135,17 @@ public class CountDetailsActivity extends BaseActivity {
                 startMonth = startMonth.length() == 2 ? startMonth : "0" + startMonth;
 //                startTime = "" + startYear + (startMonthOfYear + 1);
 //                endTime = "" + endYear + (endMonthOfYear + 1);
-                startTime = startYear + "" +
-                        startMonth;
-                endTime = endYear + "" + endMonth;
+                if (1 == type) {
+                    startTime = startYear + "" +
+                            startMonth;
+                    endTime = endYear + "" + endMonth;
+                } else {
+                    startTime = startYear + "-" +
+                            startMonth +"-"+ startDayOfMonth;
+                    endTime = endYear + "-" + endMonth +"-"+ endDayOfMonth;
+                }
+
+
                 initNetMonth(startTime, endTime, type);
 
 
@@ -1164,8 +1172,8 @@ public class CountDetailsActivity extends BaseActivity {
                     case 2:
                         path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                                 "<paras>" +
-                                "<para><name>ks</name > <sqldbtype>date</sqldbtype><value>2019-06-01</value></para> " +
-                                " <para><name>js</name > <sqldbtype>date</sqldbtype><value>2020-12-20</value></para>" +
+                                "<para><name>ks</name > <sqldbtype>date</sqldbtype><value>+" + startTime + "</value></para> " +
+                                " <para><name>js</name > <sqldbtype>date</sqldbtype><value>+" + endTime + "</value></para>" +
                                 "</paras>";
                         break;
                 }

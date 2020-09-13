@@ -30,8 +30,8 @@ import static com.example.holographicplatformapp.HttpUrls.postXml;
  * */
 public class ResourceTitleActivity extends BaseActivity {
     private RecyclerView recyclerView;
-    CustomProgressDialog customProgressDialog;
-    ResourceBean beans = null;
+    private CustomProgressDialog customProgressDialog;
+    private  ResourceBean beans = null;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {

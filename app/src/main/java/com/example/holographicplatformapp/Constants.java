@@ -62,4 +62,15 @@ public class Constants {
     public static String tj_fw_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_resourcerq/data";
     public static String tj_fw_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/tj_fw_dwrq/data";
 
+
+    /**
+     * 汇聚、服务查询按日
+     */
+    public static String cx_hj_clientrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_hj_clientrq/data";
+    public static String cx_hj_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_hj_resourcerq/data";
+    public static String cx_hj_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_hj_dwrq/data";
+     public static String cx_fw_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_fw_resourcerq/data";
+    public static String cx_fw_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_fw_dwrq/data";
+
+
 }

@@ -15,6 +15,14 @@ public class fwKHDBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * clientname : zibo-yisa-oioviae
          * systemname : 淄博以萨汇聚视频/图像采集设备信息
@@ -24,7 +32,7 @@ public class fwKHDBean {
          * tabcname : 视频/图像采集设备对象信息表
          * rows_sum : 164770
          */
-
+        private String date;
         private String clientname;
         private String systemname;
         private String Name;

@@ -51,7 +51,7 @@ public class ResourceDetailsActivity extends BaseActivity {
     private List<String> list;
     private NormalAdapter adapter;
     private int record = 0;
-    CustomProgressDialog customProgressDialog;
+    private  CustomProgressDialog customProgressDialog;
     private PullToRefreshLayout pullToRefreshLayout;
     private boolean isRefresh = false;
     private Handler mHandler = new Handler() {

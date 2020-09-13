@@ -10,10 +10,10 @@
 
     <item
         android:id="@+id/action_explore"
-        android:title="按月统计"
+        android:title="按月查询"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_me"
-        android:title="按日统计"
+        android:title="按日查询"
         app:showAsAction="never" />
 </menu>

@@ -24,7 +24,7 @@ public abstract class BaseFragment extends Fragment {
     private View mContentView;
 
 
-    Activity mActivity;
+    private Activity mActivity;
 
 
     @Nullable

@@ -47,14 +47,14 @@ public class SearchActivity extends BaseActivity {
     private SideBar sideBar;
     private TextView dialog;
     private SortAdapter adapter;
-    LinearLayoutManager manager;
+    private LinearLayoutManager manager;
     private List<SortModel> SourceDateList;
     private List<String> mListTitTle;
     private List<String> mListTitTleId;
-    KHDMCDatasBean beans;
-    DWMCDatasBean dwmcDatasBean;
-    FWKHDMCDatasBean fwkhdmcDatasBean;
-    FWDWMCDatasBean fwdwmcDatasBean;
+    private KHDMCDatasBean beans;
+    private DWMCDatasBean dwmcDatasBean;
+    private FWKHDMCDatasBean fwkhdmcDatasBean;
+    private FWDWMCDatasBean fwdwmcDatasBean;
     /**
      * 根据拼音来排列RecyclerView里面的数据类
      */
@@ -135,14 +135,14 @@ public class SearchActivity extends BaseActivity {
 
     private void showDatePicker(String name) {
         Calendar c = Calendar.getInstance();
-        new DoubleDatePickerDialog(1,SearchActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
+        new DoubleDatePickerDialog(Integer.parseInt(getIntent().getStringExtra("type")), SearchActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear,
                                   int startDayOfMonth, DatePicker endDatePicker, int endYear, int endMonthOfYear,
                                   int endDayOfMonth) {
-                String startTime;
-                String endTime;
+                String startTime = null;
+                String endTime = null;
                 /**
                  * 月份不足两位补0
                  */
@@ -151,15 +151,23 @@ public class SearchActivity extends BaseActivity {
                 String endMonth = "" + (endMonthOfYear + 1);
                 endMonth = endMonth.length() == 2 ? endMonth : "0" + endMonth;
                 startMonth = startMonth.length() == 2 ? startMonth : "0" + startMonth;
+                if ("1".equals(getIntent().getStringExtra("type"))) {
+                    startTime = startYear + "" +
+                            startMonth;
+                    endTime = endYear + "" + endMonth;
+                } else {
+                    startTime = startYear + "-" +
+                            startMonth + "-" + startDayOfMonth;
+                    endTime = endYear + "-" + endMonth + "-" + endDayOfMonth;
+                }
 
-                startTime = startYear + "" +
-                        startMonth;
-                endTime = endYear + "" + endMonth;
 
                 Intent intent = new Intent();
                 intent.putExtra("id", name);
+                intent.putExtra("type", getIntent().getStringExtra("type"));
                 intent.putExtra("startTime", startTime);
                 intent.putExtra("endTime", endTime);
+                intent.putExtra("numberType", getIntent().getStringExtra("numberType"));
                 setResult(RESULT_OK, intent);
                 finish();
 

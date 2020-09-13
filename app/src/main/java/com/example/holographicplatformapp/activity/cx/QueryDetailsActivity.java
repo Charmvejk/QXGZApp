@@ -41,12 +41,15 @@ import java.util.List;
 import static com.example.holographicplatformapp.HttpUrls.postXml;
 
 public class QueryDetailsActivity extends BaseActivity {
-    fwKHDBean beans;
-    hjZYCXBean hjZYCXBean;
-    fwDwBean fwDwBean;
-    fwZYCXBean fwZYCXBean;
-    fwDwCXBean fwDwCXBean;
-    private static int selectCode = 678;
+    private fwKHDBean beans;
+    private hjZYCXBean hjZYCXBean;
+    private fwDwBean fwDwBean;
+    private fwZYCXBean fwZYCXBean;
+    private fwDwCXBean fwDwCXBean;
+    private final int selectCode = 678;
+    private final int select2Code = 679;
+    private String niceType = "1";
+    private int type = 1;
     /**
      * 用于存放标题的id,与textview引用
      */
@@ -82,7 +85,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     } else {
                         pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                     }
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
 
                     break;
                 case 999:
@@ -97,7 +100,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     } else {
                         pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                     }
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
                     break;
                 case 000:
                     onlineSaleBeanList.clear();
@@ -111,7 +114,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     } else {
                         pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                     }
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
                     break;
                 case 1000:
                     onlineSaleBeanList.clear();
@@ -125,7 +128,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     } else {
                         pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                     }
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
                     break;
                 case 6000:
                     onlineSaleBeanList.clear();
@@ -139,7 +142,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     } else {
                         pullToRefreshLayout.showView(ViewStatus.CONTENT_STATUS);
                     }
-                    setDatas(onlineSaleBeanList, mP);
+                    setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
                     break;
             }
         }
@@ -308,7 +311,7 @@ public class QueryDetailsActivity extends BaseActivity {
             }
         }
 
-        setDatas(filterDateList, mP);
+        setDatas(filterDateList, mP, type);
         mLeftAdapter.notifyDataSetChanged();
     }
 
@@ -324,13 +327,14 @@ public class QueryDetailsActivity extends BaseActivity {
         pullToRefreshLayout.setRefreshListener(new BaseRefreshListener() {
             @Override
             public void refresh() {
-
+                niceType = "1";
                 initNet(2);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         if (isRefresh) {
+
                             pullToRefreshLayout.finishRefresh();
                             isRefresh = false;
                         }
@@ -498,7 +502,7 @@ public class QueryDetailsActivity extends BaseActivity {
         rightListView.setAdapter(mRightAdapter);
     }
 
-    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP) {
+    private void setDatas(List<OnlineSaleBean> onlineSaleBeanList, List<Integer> mP, int type) {
 
         List<TableModel> mDatas = new ArrayList<>();
         for (int i = 0; i < onlineSaleBeanList.size(); i++) {
@@ -508,7 +512,7 @@ public class QueryDetailsActivity extends BaseActivity {
             tableMode.setLeftTitle(onlineSaleBean.getCompanyName());
             tableMode.setXuhao("" + (i + 1));
             BigDecimal bd = null;
-            String date;
+            String count;
             switch (getIntent().getStringExtra("title")) {
 
                 case "汇聚按客户端查询":
@@ -520,11 +524,19 @@ public class QueryDetailsActivity extends BaseActivity {
                         tableMode.setText0(beans.getData().get(i).getName());//列0内容
                         tableMode.setText1(beans.getData().get(i).getDbcname() + "");//列1内容
                         tableMode.setText2(beans.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
-                        bd = new BigDecimal(beans.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
+                        if (type == 1) {
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
 
-                        tableMode.setText4(date);
+                        } else {
+                            String date = beans.getData().get(i).getDate() + "";
+                            tableMode.setText3(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
+                        bd = new BigDecimal(beans.getData().get(i).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText4(count);
 
                     } else {
                         finaDate = "" + beans.getData().get(mP.get(i)).getMonth();
@@ -532,12 +544,20 @@ public class QueryDetailsActivity extends BaseActivity {
                         tableMode.setText1(beans.getData().get(mP.get(i)).getDbcname() + "");//列1内容
                         tableMode.setText2(beans.getData().get(mP.get(i)).getTabcname() + "");//列2内容
 
-                        tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+                        if (type == 1) {
+                            tableMode.setText3(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = beans.getData().get(mP.get(i)).getDate() + "";
+                            tableMode.setText3(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
 
                         bd = new BigDecimal(beans.getData().get(mP.get(i)).getRows_sum());
-                        date = bd.toPlainString();
+                        count = bd.toPlainString();
 
-                        tableMode.setText4(date);
+                        tableMode.setText4(count);
 
 
                     }
@@ -549,21 +569,41 @@ public class QueryDetailsActivity extends BaseActivity {
                         finaDate = "" + hjZYCXBean.getData().get(i).getMonth();
                         tableMode.setText0(hjZYCXBean.getData().get(i).getDbcname() + "");//列1内容
                         tableMode.setText1(hjZYCXBean.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = hjZYCXBean.getData().get(i).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
+
+                        bd = new BigDecimal(hjZYCXBean.getData().get(i).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
                     } else {
                         finaDate = "" + hjZYCXBean.getData().get(mP.get(i)).getMonth();
                         tableMode.setText0(hjZYCXBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
                         tableMode.setText1(hjZYCXBean.getData().get(mP.get(i)).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(hjZYCXBean.getData().get(mP.get(i)).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = hjZYCXBean.getData().get(mP.get(i)).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
+                        bd = new BigDecimal(hjZYCXBean.getData().get(mP.get(i)).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
                     }
 
@@ -576,22 +616,39 @@ public class QueryDetailsActivity extends BaseActivity {
                         finaDate = "" + fwDwBean.getData().get(i).getMonth();
                         tableMode.setText0(fwDwBean.getData().get(i).getDbcname() + "");//列1内容
                         tableMode.setText1(fwDwBean.getData().get(i).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = fwDwBean.getData().get(i).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
+
+                        bd = new BigDecimal(fwDwBean.getData().get(i).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
 
                     } else {
                         finaDate = "" + fwDwBean.getData().get(mP.get(i)).getMonth();
                         tableMode.setText0(fwDwBean.getData().get(mP.get(i)).getDbcname() + "");//列1内容
                         tableMode.setText1(fwDwBean.getData().get(mP.get(i)).getTabcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwDwBean.getData().get(mP.get(i)).getRows_sum());
-                        date = bd.toPlainString();
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
 
-                        tableMode.setText3(date);
+                        } else {
+                            String date = fwDwBean.getData().get(mP.get(i)).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+                        bd = new BigDecimal(fwDwBean.getData().get(mP.get(i)).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
 
                     }
@@ -606,11 +663,21 @@ public class QueryDetailsActivity extends BaseActivity {
 
                         tableMode.setText0(fwZYCXBean.getData().get(i).getProc_cname() + "");//列1内容
                         tableMode.setText1(fwZYCXBean.getData().get(i).getName() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = fwZYCXBean.getData().get(i).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+
+
+                        bd = new BigDecimal(fwZYCXBean.getData().get(i).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
 
                     } else {
@@ -619,11 +686,19 @@ public class QueryDetailsActivity extends BaseActivity {
 
                         tableMode.setText0(fwZYCXBean.getData().get(mP.get(i)).getProc_cname() + "");//列1内容
                         tableMode.setText1(fwZYCXBean.getData().get(mP.get(i)).getName() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwZYCXBean.getData().get(mP.get(i)).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = fwZYCXBean.getData().get(mP.get(i)).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+                        bd = new BigDecimal(fwZYCXBean.getData().get(mP.get(i)).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
                     }
                     break;
                 case "服务按单位查询":
@@ -634,11 +709,19 @@ public class QueryDetailsActivity extends BaseActivity {
 
                         tableMode.setText0(fwDwCXBean.getData().get(i).getProc_cname() + "");//列1内容
                         tableMode.setText1(fwDwCXBean.getData().get(i).getDbcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = fwDwCXBean.getData().get(i).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+                        bd = new BigDecimal(fwDwCXBean.getData().get(i).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
 
 
                     } else {
@@ -647,11 +730,19 @@ public class QueryDetailsActivity extends BaseActivity {
 
                         tableMode.setText0(fwDwCXBean.getData().get(mP.get(i)).getProc_cname() + "");//列1内容
                         tableMode.setText1(fwDwCXBean.getData().get(mP.get(i)).getDbcname() + "");//列2内容
-                        tableMode.setText2("" + finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()) + "");
-                        bd = new BigDecimal(fwDwCXBean.getData().get(mP.get(i)).getRows_sum());
-                        date = bd.toPlainString();
 
-                        tableMode.setText3(date);
+                        if (type == 1) {
+                            tableMode.setText2(finaDate.substring(0, 4) + "-" + finaDate.substring(4, finaDate.length()));
+
+                        } else {
+                            String date = fwDwCXBean.getData().get(mP.get(i)).getDate() + "";
+                            tableMode.setText2(date.substring(0, date.indexOf("T")));//列1内容
+
+                        }
+                        bd = new BigDecimal(fwDwCXBean.getData().get(mP.get(i)).getRows_sum());
+                        count = bd.toPlainString();
+
+                        tableMode.setText3(count);
                     }
                     break;
             }
@@ -689,68 +780,81 @@ public class QueryDetailsActivity extends BaseActivity {
                  */
                 /*单位。客户端 ;服务、汇聚
                  * */
+                type = 1;
                 if (getIntent().getStringExtra("title").contains("单位") || getIntent().getStringExtra("title").contains("客户端")) {
                     Intent intent = new Intent(QueryDetailsActivity.this, SearchActivity.class);
                     intent.putExtra("title", getIntent().getStringExtra("title"));
+                    intent.putExtra("type", "1");
+                    intent.putExtra("numberType", "Int");
                     startActivityForResult(intent, selectCode);
                 }
 
                 break;
             case R.id.action_me:
+                type = 2;
                 /**
-                 *展示日期选择框
+                 * 查询 多级筛选
                  */
 
+                if (getIntent().getStringExtra("title").contains("单位") || getIntent().getStringExtra("title").contains("客户端")) {
+                    Intent intent = new Intent(QueryDetailsActivity.this, SearchActivity.class);
+                    intent.putExtra("title", getIntent().getStringExtra("title"));
+                    intent.putExtra("type", "2");
+                    intent.putExtra("numberType", "date");
+                    startActivityForResult(intent, select2Code);
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
 
     }
 
-
+    /*回调*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {//判断是否返回成功
-            initNetMonth(data.getStringExtra("id"), data.getStringExtra("startTime"), data.getStringExtra("endTime"));
+            niceType = data.getStringExtra("type");
+            initNetMonth(data.getStringExtra("numberType"), niceType, data.getStringExtra("id"), data.getStringExtra("startTime"), data.getStringExtra("endTime"));
+
         }
     }
 
-    private void initNetMonth(String id, String startTime, String endTime) {
+    private void initNetMonth(String numberType, String type, String id, String startTime, String endTime) {
         ArrayList<String> mListUrlPath = new ArrayList<>();
         customProgressDialog = new CustomProgressDialog(QueryDetailsActivity.this, "");
         customProgressDialog.show();
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>clientid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para> " +
-                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>" + startTime + "</value></para> " +
-                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>" + endTime + "</value></para>" +
+                "<para><name>ks</name > <sqldbtype>" + numberType + "</sqldbtype><value>" + startTime + "</value></para> " +
+                " <para><name>js</name > <sqldbtype>" + numberType + "</sqldbtype><value>" + endTime + "</value></para>" +
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>dbid</name > <sqldbtype>Int</sqldbtype><value>7</value></para>" +
                 "<para><name>tableid</name > <sqldbtype>Int</sqldbtype><value>19</value></para>" +
-                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value> " + startTime + "</value></para>" +
-                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value> " + endTime + "</value></para>" +
+                "<para><name>ks</name > <sqldbtype>" + numberType + "</sqldbtype><value> " + startTime + "</value></para>" +
+                " <para><name>js</name > <sqldbtype>" + numberType + "</sqldbtype><value> " + endTime + "</value></para>" +
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para>" +
-                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
-                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>  " + endTime + "</value></para>" +
+                "<para><name>ks</name > <sqldbtype>" + numberType + "</sqldbtype><value>  " + startTime + "</value></para>" +
+                " <para><name>js</name > <sqldbtype>" + numberType + "</sqldbtype><value>  " + endTime + "</value></para>" +
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>dbid</name > <sqldbtype>Int</sqldbtype><value>1</value></para>" +
                 "<para><name>request_fwid</name > <sqldbtype>Int</sqldbtype><value>-1</value></para>" +
-                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
-                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value> " + endTime + "</value></para>" +
+                "<para><name>ks</name > <sqldbtype>" + numberType + "</sqldbtype><value>  " + startTime + "</value></para>" +
+                " <para><name>js</name > <sqldbtype>" + numberType + "</sqldbtype><value> " + endTime + "</value></para>" +
                 "</paras>");
         mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
                 "<paras>" +
                 "<para><name>deptid</name > <sqldbtype>Int</sqldbtype><value>" + id + "</value></para>" +
-                "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>  " + startTime + "</value></para>" +
-                " <para><name>js</name > <sqldbtype>Int</sqldbtype><value> " + endTime + "</value></para>" +
+                "<para><name>ks</name > <sqldbtype>" + numberType + "</sqldbtype><value>  " + startTime + "</value></para>" +
+                " <para><name>js</name > <sqldbtype>" + numberType + "</sqldbtype><value> " + endTime + "</value></para>" +
                 "</paras>");
 
 
@@ -763,35 +867,56 @@ public class QueryDetailsActivity extends BaseActivity {
                 try {
                     switch (getIntent().getStringExtra("title")) {
                         case "汇聚按客户端查询":
-                            result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(0));
+                            if ("1".equals(type)) {
+                                result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(0));
+                            } else {
+                                result = postXml(getIntent().getStringExtra("dayUrl"), mListUrlPath.get(0));
+                            }
                             beans = gson.fromJson(result, fwKHDBean.class);
 
                             message.what = 666;
                             mHandler.sendMessage(message);
                             break;
                         case "汇聚按资源查询":
-                            result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(1));
+                            if ("1".equals(type)) {
+                                result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(1));
+                            } else {
+                                result = postXml(getIntent().getStringExtra("dayUrl"), mListUrlPath.get(1));
+                            }
                             hjZYCXBean = gson.fromJson(result, hjZYCXBean.class);
 
                             message.what = 999;
                             mHandler.sendMessage(message);
                             break;
                         case "汇聚按单位查询":
-                            result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(2));
+                            if ("1".equals(type)) {
+                                result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(2));
+                            } else {
+                                result = postXml(getIntent().getStringExtra("dayUrl"), mListUrlPath.get(2));
+                            }
                             fwDwBean = gson.fromJson(result, fwDwBean.class);
 
                             message.what = 000;
                             mHandler.sendMessage(message);
                             break;
                         case "服务按资源查询":
-                            result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(3));
+                            if ("1".equals(type)) {
+                                result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(3));
+                            } else {
+                                result = postXml(getIntent().getStringExtra("dayUrl"), mListUrlPath.get(3));
+                            }
                             fwZYCXBean = gson.fromJson(result, fwZYCXBean.class);
+
 
                             message.what = 1000;
                             mHandler.sendMessage(message);
                             break;
                         case "服务按单位查询":
-                            result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(4));
+                            if ("1".equals(type)) {
+                                result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(4));
+                            } else {
+                                result = postXml(getIntent().getStringExtra("dayUrl"), mListUrlPath.get(4));
+                            }
                             fwDwCXBean = gson.fromJson(result, fwDwCXBean.class);
 
                             message.what = 6000;
@@ -808,5 +933,6 @@ public class QueryDetailsActivity extends BaseActivity {
         }.start();
 
     }
+
 
 }

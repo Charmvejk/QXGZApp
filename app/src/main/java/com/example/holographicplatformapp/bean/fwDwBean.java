@@ -23,6 +23,15 @@ public class fwDwBean {
          * tabcname : 电子围栏
          * rows_sum : 1035597136
          */
+        private String date;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
 
         private String Name;
         private int month;

@@ -15,6 +15,14 @@ public class fwZYCXBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * Name : 山东省公安厅
          * month : 201912
@@ -22,7 +30,7 @@ public class fwZYCXBean {
          * proc_cname : 系统根据数据行版本同步车辆卡口信息
          * rows_sum : 58366
          */
-
+        private String date;
         private String Name;
         private int month;
         private String dbcname;

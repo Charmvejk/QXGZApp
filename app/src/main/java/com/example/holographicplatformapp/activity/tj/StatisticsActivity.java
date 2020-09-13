@@ -20,10 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.holographicplatformapp.Constants.cx_fw_dwny;
+import static com.example.holographicplatformapp.Constants.cx_fw_dwrq;
 import static com.example.holographicplatformapp.Constants.cx_fw_resourceny;
+import static com.example.holographicplatformapp.Constants.cx_fw_resourcerq;
 import static com.example.holographicplatformapp.Constants.cx_hj_clientny;
+import static com.example.holographicplatformapp.Constants.cx_hj_clientrq;
 import static com.example.holographicplatformapp.Constants.cx_hj_dwny;
+import static com.example.holographicplatformapp.Constants.cx_hj_dwrq;
 import static com.example.holographicplatformapp.Constants.cx_hj_resourceny;
+import static com.example.holographicplatformapp.Constants.cx_hj_resourcerq;
 import static com.example.holographicplatformapp.Constants.tj_fw_clientall;
 import static com.example.holographicplatformapp.Constants.tj_fw_clientny;
 import static com.example.holographicplatformapp.Constants.tj_fw_clientrq;
@@ -159,11 +164,9 @@ public class StatisticsActivity extends BaseActivity {
                 mListDayUrl.add(tj_hj_clientrq);
                 mListDayUrl.add(tj_hj_resourcerq);
                 mListDayUrl.add(tj_hj_dwrq);
-                mListDayUrl.add("");
-                mListDayUrl.add("");
-                mListDayUrl.add("");
-
-
+                mListDayUrl.add(cx_hj_clientrq);
+                mListDayUrl.add(cx_hj_resourcerq);
+                mListDayUrl.add(cx_hj_dwrq);
 
 
             } else {
@@ -186,8 +189,8 @@ public class StatisticsActivity extends BaseActivity {
                 mListDayUrl.add(tj_fw_resourcerq);
                 mListDayUrl.add(tj_fw_dwrq);
                 mListDayUrl.add("");
-                mListDayUrl.add("");
-                mListDayUrl.add("");
+                mListDayUrl.add(cx_fw_resourcerq);
+                mListDayUrl.add(cx_fw_dwrq);
 
 
             }
@@ -195,7 +198,7 @@ public class StatisticsActivity extends BaseActivity {
             holder.mCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    nextPages(mList.get(position), mListUrl.get(position),mListMonthUrl.get(position),mListDayUrl.get(position));
+                    nextPages(mList.get(position), mListUrl.get(position), mListMonthUrl.get(position), mListDayUrl.get(position));
                 }
 
 
@@ -217,7 +220,7 @@ public class StatisticsActivity extends BaseActivity {
         }
     }
 
-    private void nextPages(String title, String url,String mMonthUrl,String mDayUrl) {
+    private void nextPages(String title, String url, String mMonthUrl, String mDayUrl) {
         Intent intent;
         if (title.contains("查询")) {
             intent = new Intent(StatisticsActivity.this, QueryDetailsActivity.class);

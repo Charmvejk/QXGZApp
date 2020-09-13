@@ -29,6 +29,16 @@ public class fwDwCXBean {
         private String proc_cname;
         private double rows_sum;
 
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        private String date;
+
         public String getName() {
             return Name;
         }

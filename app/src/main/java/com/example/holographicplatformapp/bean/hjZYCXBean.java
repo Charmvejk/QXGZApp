@@ -15,6 +15,14 @@ public class hjZYCXBean {
     }
 
     public static class DataBean {
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
         /**
          * Name : 滨州市公安局
          * month : 201912
@@ -22,7 +30,7 @@ public class hjZYCXBean {
          * tabcname : 滨州就医记录信息
          * rows_sum : 2572943
          */
-
+        private String date;
         private String Name;
         private int month;
         private String dbcname;

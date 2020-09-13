@@ -49,7 +49,7 @@ public class MainFragment extends BaseFragment {
     private List<Integer> mDatas2;
     private List<String> mListDate;
     private ImageView ivHead;
-    CustomProgressDialog customProgressDialog;
+    private   CustomProgressDialog customProgressDialog;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
