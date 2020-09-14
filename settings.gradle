@@ -1,2 +1,2 @@
-include ':app'
+include ':app', ':spinner_library'
 rootProject.name='HolographicPlatformApp'

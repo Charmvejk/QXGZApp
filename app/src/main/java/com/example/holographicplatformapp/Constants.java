@@ -72,5 +72,13 @@ public class Constants {
      public static String cx_fw_resourcerq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_fw_resourcerq/data";
     public static String cx_fw_dwrq = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/cx_fw_dwrq/data";
 
+    /**
+     * hj 按资源 大类、】小类
+     */
+    public static String ydd_hj_cxzydl = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_hj_cxzydl/data";
+    public static String ydd_cx_hjzyxl = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_hjzyxl/data";
+    public static String ydd_cx_fwzydl = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_fwzydl/data";
+
+    public static String ydd_cx_fwmc = "http://115.28.9.164:9001/postparas2jsonstream/username/pwd/loginfo/ydd_cx_fwmc/data";
 
 }

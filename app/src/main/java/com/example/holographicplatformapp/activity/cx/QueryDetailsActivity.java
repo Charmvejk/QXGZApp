@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.SearchView;
 
@@ -24,9 +27,12 @@ import com.example.holographicplatformapp.bean.TableModel;
 import com.example.holographicplatformapp.bean.fwDwBean;
 import com.example.holographicplatformapp.bean.fwDwCXBean;
 import com.example.holographicplatformapp.bean.fwKHDBean;
+import com.example.holographicplatformapp.bean.fwNameBeans;
 import com.example.holographicplatformapp.bean.fwZYCXBean;
 import com.example.holographicplatformapp.bean.hjZYCXBean;
+import com.example.holographicplatformapp.bean.hjZYDLBean;
 import com.example.holographicplatformapp.dialog.CustomProgressDialog;
+import com.example.holographicplatformapp.dialog.DoubleDatePickerDialog;
 import com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.google.gson.Gson;
@@ -34,22 +40,37 @@ import com.jwenfeng.library.pulltorefresh.BaseRefreshListener;
 import com.jwenfeng.library.pulltorefresh.PullToRefreshLayout;
 import com.jwenfeng.library.pulltorefresh.ViewStatus;
 
+import org.angmarch.views.NiceSpinner;
+import org.angmarch.views.OnSpinnerItemSelectedListener;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.List;
 
+import static com.example.holographicplatformapp.Constants.ydd_cx_fwmc;
+import static com.example.holographicplatformapp.Constants.ydd_cx_fwzydl;
+import static com.example.holographicplatformapp.Constants.ydd_cx_hjzyxl;
+import static com.example.holographicplatformapp.Constants.ydd_hj_cxzydl;
 import static com.example.holographicplatformapp.HttpUrls.postXml;
 
 public class QueryDetailsActivity extends BaseActivity {
     private fwKHDBean beans;
     private hjZYCXBean hjZYCXBean;
+    private hjZYDLBean hjZYDLBean;
     private fwDwBean fwDwBean;
     private fwZYCXBean fwZYCXBean;
+    private fwNameBeans fwNameBeans;
     private fwDwCXBean fwDwCXBean;
     private final int selectCode = 678;
     private final int select2Code = 679;
     private String niceType = "1";
     private int type = 1;
+    private NiceSpinner spinner_zydl;
+    private NiceSpinner spinner_zyxl;
+    private NiceSpinner spinner_main_zydl;
     /**
      * 用于存放标题的id,与textview引用
      */
@@ -62,13 +83,15 @@ public class QueryDetailsActivity extends BaseActivity {
     private AbsCommonAdapter<TableModel> mLeftAdapter, mRightAdapter;
     private SyncHorizontalScrollView titleHorScv;
     private SyncHorizontalScrollView contentHorScv;
-    CustomProgressDialog customProgressDialog;
+    private CustomProgressDialog customProgressDialog;
     private PullToRefreshLayout pullToRefreshLayout;//刷新
     /*主要筛选过滤*/
     private int record = 0;
     private boolean isRefresh = false;
     private List<Integer> mP = new ArrayList<>();
-    List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
+    private List<OnlineSaleBean> onlineSaleBeanList = new ArrayList<>();
+    private List<String> datasetZYDL;
+    private List<String> datasetZYXL;
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
@@ -144,6 +167,83 @@ public class QueryDetailsActivity extends BaseActivity {
                     }
                     setDatas(onlineSaleBeanList, mP, Integer.parseInt(niceType));
                     break;
+                case 9899:
+                    datasetZYDL = new ArrayList<>();
+                    datasetZYDL.add("资源大类");
+                    for (int i = 0; i < hjZYDLBean.getData().size(); i++) {
+                        datasetZYDL.add(hjZYDLBean.getData().get(i).getDbcname());
+                    }
+
+                    spinner_zydl.attachDataSource(datasetZYDL);
+                    spinner_zydl.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                            String item = parent.getItemAtPosition(position).toString();
+                            spinner_zyxl.setClickable(true);
+                            initZYXL();
+                        }
+                    });
+
+
+                    break;
+
+                case 11000:
+                    datasetZYDL = new ArrayList<>();
+
+                    for (int i = 0; i < hjZYDLBean.getData().size(); i++) {
+                        datasetZYDL.add(hjZYDLBean.getData().get(i).getName());
+                    }
+
+                    spinner_main_zydl.attachDataSource(datasetZYDL);
+                    spinner_main_zydl.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                            String item = parent.getItemAtPosition(position).toString();
+                            spinner_zydl.setClickable(true);
+                            initZYXL();
+
+                        }
+                    });
+
+
+                    break;
+                case 19899:
+                     datasetZYXL = new ArrayList<>();
+
+                    for (int i = 0; i < hjZYDLBean.getData().size(); i++) {
+                        datasetZYXL.add(hjZYDLBean.getData().get(i).getTablecname());
+                    }
+
+                    spinner_zyxl.attachDataSource(datasetZYXL);
+                    spinner_zyxl.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                            String item = parent.getItemAtPosition(position).toString();
+
+                        }
+                    });
+
+
+                    break;
+                case 1111000:
+                    datasetZYXL = new ArrayList<>();
+
+                    for (int i = 0; i < fwNameBeans.getData().size(); i++) {
+                        datasetZYXL.add(fwNameBeans.getData().get(i).getProc_cname());
+                    }
+
+                    spinner_zydl.attachDataSource(datasetZYXL);
+                    spinner_zydl.setOnSpinnerItemSelectedListener(new OnSpinnerItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(NiceSpinner parent, View view, int position, long id) {
+                            String item = parent.getItemAtPosition(position).toString();
+
+                        }
+                    });
+
+
+
+                    break;
             }
         }
 
@@ -155,6 +255,54 @@ public class QueryDetailsActivity extends BaseActivity {
     protected void initDatas() {
         initNet(1);
         mToolbarTb.setTitle(getIntent().getStringExtra("title"));
+
+    }
+
+    private void initZYXL() {
+        /*
+         * 查询 汇聚、服务资源小类
+         * */
+        new Thread() {
+            @Override
+            public void run() {
+                String result;
+                Message message = new Message();
+                Gson gson = new Gson();
+                String path = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?> " +
+                        "<paras> " +
+
+                        "</paras>";
+                try {
+                    switch (getIntent().getStringExtra("title")) {
+
+                        case "汇聚按资源查询":
+
+                            String result2 = postXml(ydd_cx_hjzyxl, path);
+                            hjZYDLBean = gson.fromJson(result2, hjZYDLBean.class);
+
+                            message.what = 19899;
+                            mHandler.sendMessage(message);
+
+                            break;
+                        case "服务按资源查询":
+                            result = postXml(ydd_cx_fwmc, path);
+                            fwNameBeans = gson.fromJson(result, fwNameBeans.class);
+
+                            message.what = 1111000;
+                            mHandler.sendMessage(message);
+                            break;
+
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + getIntent().getStringExtra("title"));
+                    }
+
+
+                } catch (Exception e) {
+
+                }
+
+            }
+        }.start();
     }
 
     private void initNet(int i) {
@@ -197,7 +345,9 @@ public class QueryDetailsActivity extends BaseActivity {
                 "<para><name>ks</name > <sqldbtype>Int</sqldbtype><value>201912</value></para>" +
                 " <para><name>js</name > <sqldbtype>Int</sqldbtype><value>202004</value></para>" +
                 "</paras>");
-
+        mListUrlPath.add("<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\" ?>" +
+                "<paras>" +
+                "</paras>");
 
         new Thread() {
             @Override
@@ -220,6 +370,7 @@ public class QueryDetailsActivity extends BaseActivity {
 
                             message.what = 999;
                             mHandler.sendMessage(message);
+
                             break;
                         case "汇聚按单位查询":
                             result = postXml(getIntent().getStringExtra("url"), mListUrlPath.get(2));
@@ -251,6 +402,44 @@ public class QueryDetailsActivity extends BaseActivity {
 
             }
         }.start();
+        /*
+         * 查询 汇聚、服务资源大类
+         * */
+        new Thread() {
+            @Override
+            public void run() {
+                String result;
+                Message message = new Message();
+                Gson gson = new Gson();
+                try {
+                    switch (getIntent().getStringExtra("title")) {
+
+                        case "汇聚按资源查询":
+                            String result2 = postXml(ydd_hj_cxzydl, mListUrlPath.get(5));
+                            hjZYDLBean = gson.fromJson(result2, hjZYDLBean.class);
+
+                            message.what = 9899;
+                            mHandler.sendMessage(message);
+
+                            break;
+                        case "服务按资源查询":
+                            result = postXml(ydd_cx_fwzydl, mListUrlPath.get(5));
+                            hjZYDLBean = gson.fromJson(result, hjZYDLBean.class);
+
+                            message.what = 11000;
+                            mHandler.sendMessage(message);
+                            break;
+
+                    }
+
+
+                } catch (Exception e) {
+
+                }
+
+            }
+        }.start();
+
 
     }
 
@@ -318,6 +507,7 @@ public class QueryDetailsActivity extends BaseActivity {
     @Override
     protected void initView() {
         tv_table_title_left = (TextView) findViewById(R.id.tv_table_title_left);
+        spinner_main_zydl = findViewById(R.id.nice_spinner_zydl);
         pullToRefreshLayout = findViewById(R.id.pull_refresh);
         leftListView = (ListView) findViewById(R.id.left_container_listview);
         rightListView = (ListView) findViewById(R.id.right_container_listview);
@@ -328,6 +518,7 @@ public class QueryDetailsActivity extends BaseActivity {
             @Override
             public void refresh() {
                 niceType = "1";
+                type=1;
                 initNet(2);
 
                 new Handler().postDelayed(new Runnable() {
@@ -360,12 +551,16 @@ public class QueryDetailsActivity extends BaseActivity {
         TextView tv_table_title_2 = view.findViewById(R.id.tv_table_title_2);
         TextView tv_table_title_3 = view.findViewById(R.id.tv_table_title_3);
         TextView tv_table_title_4 = view.findViewById(R.id.tv_table_title_4);
+        spinner_zydl = view.findViewById(R.id.nice_spinner_zydl);
+        spinner_zyxl = view.findViewById(R.id.nice_spinner_zyxl);
         List<String> mlist = new ArrayList<>();
         mlist.clear();
+
         switch (getIntent().getStringExtra("title")) {
 
             case "汇聚按客户端查询":
                 tv_table_title_left.setText("客户端名称");
+
 
                 mlist.add("单位名称");
                 mlist.add("资源大类");
@@ -377,11 +572,17 @@ public class QueryDetailsActivity extends BaseActivity {
                 break;
             case "汇聚按资源查询":
                 tv_table_title_left.setText("单位名称");
-
+                tv_table_title_0.setVisibility(View.GONE);
+                spinner_zydl.setVisibility(View.VISIBLE);
+                tv_table_title_1.setVisibility(View.GONE);
+                spinner_zyxl.setVisibility(View.VISIBLE);
+                spinner_zyxl.setClickable(false);
                 mlist.add("资源大类");
                 mlist.add("资源小类");
                 mlist.add("月份");
                 mlist.add("数量");
+
+
                 refreshUI(mlist, tv_table_title_0, tv_table_title_1, tv_table_title_2, tv_table_title_3, tv_table_title_4);
 
                 break;
@@ -396,12 +597,21 @@ public class QueryDetailsActivity extends BaseActivity {
 
                 break;
             case "服务按资源查询":
-                tv_table_title_left.setText("资源大类");
+                tv_table_title_left.setVisibility(View.GONE);
+                spinner_main_zydl.setVisibility(View.VISIBLE);
+                tv_table_title_0.setVisibility(View.GONE);
+                spinner_zydl.setVisibility(View.VISIBLE);
+                spinner_zydl.setClickable(false);
 
                 mlist.add("服务名称");
                 mlist.add("单位名称");
                 mlist.add("月份");
                 mlist.add("数量");
+
+
+//                tv_table_title_0.setVisibility(View.GONE);
+//                spinner_zydl.setVisibility(View.VISIBLE);
+
                 refreshUI(mlist, tv_table_title_0, tv_table_title_1, tv_table_title_2, tv_table_title_3, tv_table_title_4);
 
                 break;
@@ -787,6 +997,9 @@ public class QueryDetailsActivity extends BaseActivity {
                     intent.putExtra("type", "1");
                     intent.putExtra("numberType", "Int");
                     startActivityForResult(intent, selectCode);
+                }else {
+                    /*资源弹框*/
+                    showDatePicker(1);
                 }
 
                 break;
@@ -802,11 +1015,54 @@ public class QueryDetailsActivity extends BaseActivity {
                     intent.putExtra("type", "2");
                     intent.putExtra("numberType", "date");
                     startActivityForResult(intent, select2Code);
+                }else {
+                    /*资源弹框*/
+                    showDatePicker(2);
                 }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void showDatePicker(int type) {
+
+        Calendar c = Calendar.getInstance();
+        new DoubleDatePickerDialog(type, QueryDetailsActivity.this, 3, new DoubleDatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear,
+                                  int startDayOfMonth, DatePicker endDatePicker, int endYear, int endMonthOfYear,
+                                  int endDayOfMonth) {
+                String startTime;
+                String endTime;
+                /**
+                 * 月份不足两位补0
+                 */
+
+                String startMonth = "" + (startMonthOfYear + 1);
+                String endMonth = "" + (endMonthOfYear + 1);
+                endMonth = endMonth.length() == 2 ? endMonth : "0" + endMonth;
+                startMonth = startMonth.length() == 2 ? startMonth : "0" + startMonth;
+//                startTime = "" + startYear + (startMonthOfYear + 1);
+//                endTime = "" + endYear + (endMonthOfYear + 1);
+                if (1 == type) {
+                    startTime = startYear + "" +
+                            startMonth;
+                    endTime = endYear + "" + endMonth;
+                } else {
+                    startTime = startYear + "-" +
+                            startMonth +"-"+ startDayOfMonth;
+                    endTime = endYear + "-" + endMonth +"-"+ endDayOfMonth;
+                }
+
+                niceType = ""+type;
+                initNetMonth("date",""+niceType,null,startTime, endTime);
+
+
+            }
+        }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DATE), false).show();
     }
 
     /*回调*/

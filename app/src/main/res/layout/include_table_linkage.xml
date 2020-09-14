@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -26,6 +27,17 @@
             android:textColor="#000000"
             android:textSize="12sp" />
 
+        <org.angmarch.views.NiceSpinner
+            android:id="@+id/nice_spinner_zydl"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_weight="2"
+            android:maxLength="4"
+            android:text="资源大类"
+            android:textSize="11sp"
+            android:visibility="gone"
+
+            app:layout_constraintVertical_bias="0.0" />
         <!-- 右侧标题的父容器可实现水平滚动 -->
         <com.example.holographicplatformapp.scrrow.SyncHorizontalScrollView
             android:id="@+id/title_horsv"

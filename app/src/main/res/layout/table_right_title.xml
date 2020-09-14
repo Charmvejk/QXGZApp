@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/merge_sales"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,11 +10,33 @@
         style="@style/TextView_Table_Right"
         android:text="列标题0" />
 
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/nice_spinner_zydl"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:maxLength="4"
+        android:text="资源大类"
+        android:textSize="11sp"
+        android:visibility="gone"
+
+        app:layout_constraintVertical_bias="0.0" />
+
     <TextView
         android:id="@+id/tv_table_title_1"
         style="@style/TextView_Table_Right"
 
         android:text="列标题1" />
+
+    <org.angmarch.views.NiceSpinner
+        android:id="@+id/nice_spinner_zyxl"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:maxLength="4"
+        android:text="资源小类"
+        android:textSize="11sp"
+        android:visibility="gone"
+
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_table_title_2"
@@ -25,10 +48,11 @@
         style="@style/TextView_Table_Right"
         android:text="月份" />
 
+
     <TextView
         android:id="@+id/tv_table_title_4"
         style="@style/TextView_Table_Right"
         android:text="月份" />
 
 
-</merge>
+</LinearLayout>

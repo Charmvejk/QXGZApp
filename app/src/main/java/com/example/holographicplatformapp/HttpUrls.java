@@ -6,6 +6,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/*网络请求
+ * */
 public class HttpUrls {
     public static String postXml(String url, String xmlStr) {
         RequestBody body = RequestBody.create(MediaType.parse("application/utf-8"), xmlStr);
