@@ -81,6 +81,7 @@ public class NiceSpinner extends AppCompatTextView {
     private int parentVerticalOffset;
     private int dropDownListPaddingBottom;
     private @DrawableRes
+
     int arrowDrawableResId;
     private SpinnerTextFormatter spinnerTextFormatter = new SimpleSpinnerTextFormatter();
     private SpinnerTextFormatter selectedTextFormatter = new SimpleSpinnerTextFormatter();
