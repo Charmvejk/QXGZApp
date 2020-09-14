@@ -61,7 +61,7 @@ public abstract class NiceSpinnerBaseAdapter<T> extends BaseAdapter {
             textView = convertView.findViewById(R.id.text_view_spinner);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                textView.setBackground(ContextCompat.getDrawable(context, backgroundSelector));
+//                textView.setBackground(ContextCompat.getDrawable(context, backgroundSelector));
             }
             convertView.setTag(new ViewHolder(textView));
         } else {

@@ -189,7 +189,7 @@ public class QueryDetailsActivity extends BaseActivity {
 
                 case 11000:
                     datasetZYDL = new ArrayList<>();
-
+                    datasetZYDL.add("资源大类");
                     for (int i = 0; i < hjZYDLBean.getData().size(); i++) {
                         datasetZYDL.add(hjZYDLBean.getData().get(i).getName());
                     }
@@ -208,7 +208,7 @@ public class QueryDetailsActivity extends BaseActivity {
 
                     break;
                 case 19899:
-                     datasetZYXL = new ArrayList<>();
+                    datasetZYXL = new ArrayList<>();
 
                     for (int i = 0; i < hjZYDLBean.getData().size(); i++) {
                         datasetZYXL.add(hjZYDLBean.getData().get(i).getTablecname());
@@ -240,7 +240,6 @@ public class QueryDetailsActivity extends BaseActivity {
 
                         }
                     });
-
 
 
                     break;
@@ -447,7 +446,11 @@ public class QueryDetailsActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_select_type2, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
-        searchView.setQueryHint(tv_table_title_left.getText().toString());
+        if ("服务按资源查询".equals(getIntent().getStringExtra("title"))) {
+            searchView.setQueryHint("资源大类名称");
+        } else {
+            searchView.setQueryHint(tv_table_title_left.getText().toString());
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {  // 点击软件盘搜索按钮会弹出 吐司
@@ -518,7 +521,7 @@ public class QueryDetailsActivity extends BaseActivity {
             @Override
             public void refresh() {
                 niceType = "1";
-                type=1;
+                type = 1;
                 initNet(2);
 
                 new Handler().postDelayed(new Runnable() {
@@ -577,6 +580,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 tv_table_title_1.setVisibility(View.GONE);
                 spinner_zyxl.setVisibility(View.VISIBLE);
                 spinner_zyxl.setClickable(false);
+
                 mlist.add("资源大类");
                 mlist.add("资源小类");
                 mlist.add("月份");
@@ -602,7 +606,7 @@ public class QueryDetailsActivity extends BaseActivity {
                 tv_table_title_0.setVisibility(View.GONE);
                 spinner_zydl.setVisibility(View.VISIBLE);
                 spinner_zydl.setClickable(false);
-
+                spinner_zydl.setText("服务名称");
                 mlist.add("服务名称");
                 mlist.add("单位名称");
                 mlist.add("月份");
@@ -997,7 +1001,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     intent.putExtra("type", "1");
                     intent.putExtra("numberType", "Int");
                     startActivityForResult(intent, selectCode);
-                }else {
+                } else {
                     /*资源弹框*/
                     showDatePicker(1);
                 }
@@ -1015,7 +1019,7 @@ public class QueryDetailsActivity extends BaseActivity {
                     intent.putExtra("type", "2");
                     intent.putExtra("numberType", "date");
                     startActivityForResult(intent, select2Code);
-                }else {
+                } else {
                     /*资源弹框*/
                     showDatePicker(2);
                 }
@@ -1053,12 +1057,12 @@ public class QueryDetailsActivity extends BaseActivity {
                     endTime = endYear + "" + endMonth;
                 } else {
                     startTime = startYear + "-" +
-                            startMonth +"-"+ startDayOfMonth;
-                    endTime = endYear + "-" + endMonth +"-"+ endDayOfMonth;
+                            startMonth + "-" + startDayOfMonth;
+                    endTime = endYear + "-" + endMonth + "-" + endDayOfMonth;
                 }
 
-                niceType = ""+type;
-                initNetMonth("date",""+niceType,null,startTime, endTime);
+                niceType = "" + type;
+                initNetMonth("date", "" + niceType, null, startTime, endTime);
 
 
             }
